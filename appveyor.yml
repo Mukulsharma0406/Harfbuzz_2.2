@@ -76,4 +76,7 @@ test: off
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: build\*
-  - path: build\$(configuration)\*
+  - path: build\$(configuration)\*.lib
+  - path: build\$(configuration)\*.pdb
+  - path: build\$(configuration)\*.dll
+  
