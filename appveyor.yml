@@ -32,7 +32,7 @@ build_script:
   - 'if "%compiler%"=="msvc" cd build'
   - 'if "%compiler%"=="msvc" set PATH=%PATH%;C:\Program Files (x86)\MSBuild\14.0\Bin'
 
-  - 'if "%compiler%"=="msvc" if "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=ON -DHB_HAVE_DIRECTWRITE=ON -G "%generator%" ../'
+  - 'if "%compiler%"=="msvc" if "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_FREETYPE=OFF -G "%generator%" ../'
   - 'if "%compiler%"=="msvc" if not "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_GLIB=OFF -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_UTILS=ON -G "%generator%" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ../'
 
   - 'if "%compiler%"=="msvc" msbuild harfbuzz.sln /p:Configuration=%configuration% /p:Platform=%platform%'

@@ -14,7 +14,7 @@ steps:
     .\vcpkg integrate install
     .\vcpkg install glib:x86-windows freetype:x86-windows cairo:x86-windows
     cd ..
-    cmake -Bbuild -H. -DHB_HAVE_UNISCRIBE=ON -DHB_HAVE_DIRECTWRITE=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_FREETYPE=ON -DHB_BUILD_UTILS=ON -G "%generator%" -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake ../
+    cmake -Bbuild -H. -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_GLIB=OFF -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_UTILS=ON -G "%generator%" -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake ../
     msbuild harfbuzz.sln /p:Configuration=Debug /p:Platform=Win32
     cd build
     ctest --output-on-failure -C Debug
