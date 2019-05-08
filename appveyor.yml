@@ -58,3 +58,10 @@ skip_branch_with_pr: true
 
 # disable automatic tests
 test: off
+
+artifacts:
+  # bdist_wheel puts your built wheel in the dist directory
+  - path: dist\*
+  - path: dist\*
+  - path: dist\*
+  - path: dist\*
