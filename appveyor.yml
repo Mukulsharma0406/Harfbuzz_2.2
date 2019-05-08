@@ -8,6 +8,17 @@ environment:
       configuration: Debug
       triplet: x86-windows
     - compiler: msvc
+      generator: Visual Studio 14
+      platform: Win32
+      configuration: Release
+      triplet: x86-windows
+    
+    - compiler: msvc
+      generator: Visual Studio 14 Win64
+      platform: x64
+      configuration: Release
+      triplet: x64-windows
+    - compiler: msvc
       generator: Visual Studio 14 Win64
       platform: x64
       configuration: Debug
@@ -17,7 +28,10 @@ environment:
       generator: Visual Studio 14 ARM
       platform: ARM
       configuration: Debug
-
+    - compiler: msvc
+      generator: Visual Studio 14 ARM
+      platform: ARM
+      configuration: Release
 
 install:
 # - 'if "%compiler%"=="msys2" C:\msys64\usr\bin\bash -lc "pacman --noconfirm --force -Sy && pacman --noconfirm --force -S pacman-mirrors && pacman --force -Syu --noconfirm"'
@@ -62,3 +76,4 @@ test: off
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: build\*
+  - path: build\$(configuration)\*
