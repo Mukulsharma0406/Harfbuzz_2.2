@@ -3,16 +3,16 @@ platform: x64
 environment:
   matrix:
     - compiler: msvc
-      generator: Visual Studio 15 2017
+      generator: Visual Studio 15
       platform: x64
       configuration: Debug
       triplet: x64-windows
     - compiler: msvc
-      generator: Visual Studio 15 2017
+      generator: Visual Studio 15
       platform: ARM
       configuration: Debug
     - compiler: msvc
-      generator: Visual Studio 15 2017
+      generator: Visual Studio 15
       platform: ARM64
       configuration: Debug
 
