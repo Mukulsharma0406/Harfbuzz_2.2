@@ -8,6 +8,16 @@ environment:
       platform: x64
       configuration: Release
       triplet: x64-windows
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      compiler: msvc
+      generator: Visual Studio 15 2017 ARM
+      platform: ARM
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      compiler: msvc
+      generator: Visual Studio 15 2017 ARM64
+      platform: ARM64
+      configuration: Release
 
 install:
 # - 'if "%compiler%"=="msys2" C:\msys64\usr\bin\bash -lc "pacman --noconfirm --force -Sy && pacman --noconfirm --force -S pacman-mirrors && pacman --force -Syu --noconfirm"'
@@ -23,7 +33,8 @@ build_script:
   - 'if "%compiler%"=="msvc" set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin'
 
   - 'if "%compiler%"=="msvc" if "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_FREETYPE=OFF -G "%generator%" ../'
-  - 'if "%compiler%"=="msvc" if not "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_GLIB=OFF -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_UTILS=OFF -G "%generator%" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ../'
+  - 'if "%compiler%"=="msvc" if "%platform%"=="ARM64" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_FREETYPE=OFF -G "%generator%" ../'
+  - 'if "%compiler%"=="msvc" if "%platform%"=="x64" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_GLIB=OFF -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_UTILS=OFF -G "%generator%" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ../'
 
   - 'if "%compiler%"=="msvc" msbuild harfbuzz.sln /p:Configuration=%configuration% /p:Platform=%platform%'
   - 'if "%compiler%"=="msvc" if not "%platform%"=="ARM" ctest --output-on-failure -C %configuration%'
