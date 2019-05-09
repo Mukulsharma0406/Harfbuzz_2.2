@@ -3,18 +3,10 @@ platform: x64
 environment:
   matrix:
     - compiler: msvc
-      generator: Visual Studio 15
+      generator: Visual Studio 14 
       platform: x64
       configuration: Debug
       triplet: x64-windows
-    - compiler: msvc
-      generator: Visual Studio 15
-      platform: ARM
-      configuration: Debug
-    - compiler: msvc
-      generator: Visual Studio 15
-      platform: ARM64
-      configuration: Debug
 
 install:
 # - 'if "%compiler%"=="msys2" C:\msys64\usr\bin\bash -lc "pacman --noconfirm --force -Sy && pacman --noconfirm --force -S pacman-mirrors && pacman --force -Syu --noconfirm"'
