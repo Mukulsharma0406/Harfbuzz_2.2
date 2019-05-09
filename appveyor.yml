@@ -3,7 +3,7 @@ platform: x64
 environment:
   matrix:
     - compiler: msvc
-      generator: Visual Studio 2017 Preview
+      generator: Visual Studio 15 2017 Win64
       platform: x64
       configuration: Release
       triplet: x64-windows
