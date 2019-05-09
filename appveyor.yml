@@ -3,35 +3,10 @@ platform: x64
 environment:
   matrix:
     - compiler: msvc
-      generator: Visual Studio 14
+      generator: Visual Studio 2017
       platform: Win32
       configuration: Debug
       triplet: x86-windows
-    - compiler: msvc
-      generator: Visual Studio 14
-      platform: Win32
-      configuration: Release
-      triplet: x86-windows
-    
-    - compiler: msvc
-      generator: Visual Studio 14 Win64
-      platform: x64
-      configuration: Release
-      triplet: x64-windows
-    - compiler: msvc
-      generator: Visual Studio 14 Win64
-      platform: x64
-      configuration: Debug
-      triplet: x64-windows
-
-    - compiler: msvc
-      generator: Visual Studio 14 ARM
-      platform: ARM64
-      configuration: Debug
-    - compiler: msvc
-      generator: Visual Studio 14 ARM
-      platform: ARM64
-      configuration: Release
 
 install:
 # - 'if "%compiler%"=="msys2" C:\msys64\usr\bin\bash -lc "pacman --noconfirm --force -Sy && pacman --noconfirm --force -S pacman-mirrors && pacman --force -Syu --noconfirm"'
@@ -44,7 +19,7 @@ install:
 build_script:
   - 'if "%compiler%"=="msvc" md build'
   - 'if "%compiler%"=="msvc" cd build'
-  - 'if "%compiler%"=="msvc" set PATH=%PATH%;C:\Program Files (x86)\MSBuild\14.0\Bin'
+  - 'if "%compiler%"=="msvc" set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin'
 
   - 'if "%compiler%"=="msvc" if "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_FREETYPE=OFF -G "%generator%" ../'
   - 'if "%compiler%"=="msvc" if not "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_GLIB=OFF -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_UTILS=OFF -G "%generator%" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ../'
