@@ -3,6 +3,11 @@ image: Visual Studio 2017
 environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      compiler: msvc
+      generator: Visual Studio 2017 Win64
+      platform: x64
+      configuration: Release
+      triplet: x64-windows
 
 install:
 # - 'if "%compiler%"=="msys2" C:\msys64\usr\bin\bash -lc "pacman --noconfirm --force -Sy && pacman --noconfirm --force -S pacman-mirrors && pacman --force -Syu --noconfirm"'
