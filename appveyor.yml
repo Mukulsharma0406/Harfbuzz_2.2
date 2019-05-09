@@ -26,11 +26,11 @@ environment:
 
     - compiler: msvc
       generator: Visual Studio 14 ARM
-      platform: ARM
+      platform: ARM64
       configuration: Debug
     - compiler: msvc
       generator: Visual Studio 14 ARM
-      platform: ARM
+      platform: ARM64
       configuration: Release
 
 install:
