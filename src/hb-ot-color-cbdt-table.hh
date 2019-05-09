@@ -45,18 +45,18 @@ namespace OT {
 
 struct SmallGlyphMetrics
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
   }
 
-  void get_extents (hb_glyph_extents_t *extents) const
+  inline void get_extents (hb_glyph_extents_t *extents) const
   {
     extents->x_bearing = bearingX;
     extents->y_bearing = bearingY;
     extents->width = width;
-    extents->height = - (hb_position_t) height;
+    extents->height = -height;
   }
 
   HBUINT8	height;
@@ -79,7 +79,7 @@ struct BigGlyphMetrics : SmallGlyphMetrics
 
 struct SBitLineMetrics
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -108,7 +108,7 @@ struct SBitLineMetrics
 
 struct IndexSubtableHeader
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -124,7 +124,7 @@ struct IndexSubtableHeader
 template <typename OffsetType>
 struct IndexSubtableFormat1Or3
 {
-  bool sanitize (hb_sanitize_context_t *c, unsigned int glyph_count) const
+  inline bool sanitize (hb_sanitize_context_t *c, unsigned int glyph_count) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -144,7 +144,7 @@ struct IndexSubtableFormat1Or3
   }
 
   IndexSubtableHeader	header;
-  UnsizedArrayOf<Offset<OffsetType>>
+  UnsizedArrayOf<Offset<OffsetType> >
  			offsetArrayZ;
   public:
   DEFINE_SIZE_ARRAY(8, offsetArrayZ);
@@ -155,7 +155,7 @@ struct IndexSubtableFormat3 : IndexSubtableFormat1Or3<HBUINT16> {};
 
 struct IndexSubtable
 {
-  bool sanitize (hb_sanitize_context_t *c, unsigned int glyph_count) const
+  inline bool sanitize (hb_sanitize_context_t *c, unsigned int glyph_count) const
   {
     TRACE_SANITIZE (this);
     if (!u.header.sanitize (c)) return_trace (false);
@@ -166,7 +166,7 @@ struct IndexSubtable
     }
   }
 
-  bool get_extents (hb_glyph_extents_t *extents HB_UNUSED) const
+  inline bool get_extents (hb_glyph_extents_t *extents HB_UNUSED) const
   {
     switch (u.header.indexFormat) {
     case 2: case 5: /* TODO */
@@ -201,7 +201,7 @@ struct IndexSubtable
 
 struct IndexSubtableRecord
 {
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -209,8 +209,8 @@ struct IndexSubtableRecord
 		  offsetToSubtable.sanitize (c, base, lastGlyphIndex - firstGlyphIndex + 1));
   }
 
-  bool get_extents (hb_glyph_extents_t *extents,
-		    const void *base) const
+  inline bool get_extents (hb_glyph_extents_t *extents,
+			   const void *base) const
   {
     return (base+offsetToSubtable).get_extents (extents);
   }
@@ -237,7 +237,7 @@ struct IndexSubtableArray
 {
   friend struct CBDT;
 
-  bool sanitize (hb_sanitize_context_t *c, unsigned int count) const
+  inline bool sanitize (hb_sanitize_context_t *c, unsigned int count) const
   {
     TRACE_SANITIZE (this);
     return_trace (indexSubtablesZ.sanitize (c, count, this));
@@ -265,7 +265,7 @@ struct BitmapSizeTable
   friend struct CBLC;
   friend struct CBDT;
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -283,7 +283,7 @@ struct BitmapSizeTable
   }
 
   protected:
-  LNNOffsetTo<IndexSubtableArray>
+  LOffsetTo<IndexSubtableArray, false>
 			indexSubtableArrayOffset;
   HBUINT32		indexTablesSize;
   HBUINT32		numberOfIndexSubtables;
@@ -332,9 +332,9 @@ struct CBLC
 {
   friend struct CBDT;
 
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_CBLC;
+  static const hb_tag_t tableTag = HB_OT_TAG_CBLC;
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -349,15 +349,15 @@ struct CBLC
     if (unlikely (!count))
       return Null(BitmapSizeTable);
 
-    unsigned int requested_ppem = hb_max (font->x_ppem, font->y_ppem);
+    unsigned int requested_ppem = MAX (font->x_ppem, font->y_ppem);
     if (!requested_ppem)
       requested_ppem = 1<<30; /* Choose largest strike. */
     unsigned int best_i = 0;
-    unsigned int best_ppem = hb_max (sizeTables[0].ppemX, sizeTables[0].ppemY);
+    unsigned int best_ppem = MAX (sizeTables[0].ppemX, sizeTables[0].ppemY);
 
     for (unsigned int i = 1; i < count; i++)
     {
-      unsigned int ppem = hb_max (sizeTables[i].ppemX, sizeTables[i].ppemY);
+      unsigned int ppem = MAX (sizeTables[i].ppemX, sizeTables[i].ppemY);
       if ((requested_ppem <= ppem && ppem < best_ppem) ||
 	  (requested_ppem > best_ppem && ppem > best_ppem))
       {
@@ -378,11 +378,11 @@ struct CBLC
 
 struct CBDT
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_CBDT;
+  static const hb_tag_t tableTag = HB_OT_TAG_CBDT;
 
   struct accelerator_t
   {
-    void init (hb_face_t *face)
+    inline void init (hb_face_t *face)
     {
       cblc = hb_sanitize_context_t().reference_table<CBLC> (face);
       cbdt = hb_sanitize_context_t().reference_table<CBDT> (face);
@@ -390,14 +390,14 @@ struct CBDT
       upem = hb_face_get_upem (face);
     }
 
-    void fini ()
+    inline void fini (void)
     {
       this->cblc.destroy ();
       this->cbdt.destroy ();
     }
 
-    bool get_extents (hb_font_t *font, hb_codepoint_t glyph,
-		      hb_glyph_extents_t *extents) const
+    inline bool get_extents (hb_font_t *font, hb_codepoint_t glyph,
+			     hb_glyph_extents_t *extents) const
     {
       const void *base;
       const BitmapSizeTable &strike = this->cblc->choose_strike (font);
@@ -442,17 +442,17 @@ struct CBDT
       }
 
       /* Convert to font units. */
-      float x_scale = upem / (float) strike.ppemX;
-      float y_scale = upem / (float) strike.ppemY;
-      extents->x_bearing = roundf (extents->x_bearing * x_scale);
-      extents->y_bearing = roundf (extents->y_bearing * y_scale);
-      extents->width = roundf (extents->width * x_scale);
-      extents->height = roundf (extents->height * y_scale);
+      double x_scale = upem / (double) strike.ppemX;
+      double y_scale = upem / (double) strike.ppemY;
+      extents->x_bearing = round (extents->x_bearing * x_scale);
+      extents->y_bearing = round (extents->y_bearing * y_scale);
+      extents->width = round (extents->width * x_scale);
+      extents->height = round (extents->height * y_scale);
 
       return true;
     }
 
-    hb_blob_t* reference_png (hb_font_t      *font,
+    inline hb_blob_t* reference_png (hb_font_t      *font,
 				     hb_codepoint_t  glyph) const
     {
       const void *base;
@@ -505,7 +505,7 @@ struct CBDT
       return hb_blob_get_empty ();
     }
 
-    bool has_data () const { return cbdt.get_length (); }
+    inline bool has_data () const { return cbdt.get_length (); }
 
     private:
     hb_blob_ptr_t<CBLC> cblc;
@@ -514,7 +514,7 @@ struct CBDT
     unsigned int upem;
   };
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&

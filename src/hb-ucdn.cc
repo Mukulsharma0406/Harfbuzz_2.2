@@ -171,10 +171,6 @@ static const hb_script_t ucdn_script_translate[] =
     HB_SCRIPT_MEDEFAIDRIN,
     HB_SCRIPT_OLD_SOGDIAN,
     HB_SCRIPT_SOGDIAN,
-    HB_SCRIPT_ELYMAIC,
-    HB_SCRIPT_NANDINAGARI,
-    HB_SCRIPT_NYIAKENG_PUACHUE_HMONG,
-    HB_SCRIPT_WANCHO,
 };
 
 static hb_unicode_combining_class_t
@@ -227,12 +223,12 @@ hb_ucdn_decompose(hb_unicode_funcs_t *ufuncs HB_UNUSED,
 
 
 #if HB_USE_ATEXIT
-static void free_static_ucdn_funcs ();
+static void free_static_ucdn_funcs (void);
 #endif
 
 static struct hb_ucdn_unicode_funcs_lazy_loader_t : hb_unicode_funcs_lazy_loader_t<hb_ucdn_unicode_funcs_lazy_loader_t>
 {
-  static hb_unicode_funcs_t *create ()
+  static inline hb_unicode_funcs_t *create (void)
   {
     hb_unicode_funcs_t *funcs = hb_unicode_funcs_create (nullptr);
 
@@ -255,7 +251,7 @@ static struct hb_ucdn_unicode_funcs_lazy_loader_t : hb_unicode_funcs_lazy_loader
 
 #if HB_USE_ATEXIT
 static
-void free_static_ucdn_funcs ()
+void free_static_ucdn_funcs (void)
 {
   static_ucdn_funcs.free_instance ();
 }
@@ -263,10 +259,10 @@ void free_static_ucdn_funcs ()
 
 extern "C" HB_INTERNAL
 hb_unicode_funcs_t *
-hb_ucdn_get_unicode_funcs ();
+hb_ucdn_get_unicode_funcs (void);
 
 hb_unicode_funcs_t *
-hb_ucdn_get_unicode_funcs ()
+hb_ucdn_get_unicode_funcs (void)
 {
   return static_ucdn_funcs.get_unconst ();
 }

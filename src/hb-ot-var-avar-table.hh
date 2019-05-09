@@ -42,7 +42,7 @@ namespace OT {
 
 struct AxisValueMap
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -59,7 +59,7 @@ struct AxisValueMap
 
 struct SegmentMaps : ArrayOf<AxisValueMap>
 {
-  int map (int value) const
+  inline int map (int value) const
   {
     /* The following special-cases are not part of OpenType, which requires
      * that at least -1, 0, and +1 must be mapped. But we include these as
@@ -99,9 +99,9 @@ struct SegmentMaps : ArrayOf<AxisValueMap>
 
 struct avar
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_avar;
+  static const hb_tag_t tableTag	= HB_OT_TAG_avar;
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!(version.sanitize (c) &&
@@ -121,9 +121,9 @@ struct avar
     return_trace (true);
   }
 
-  void map_coords (int *coords, unsigned int coords_length) const
+  inline void map_coords (int *coords, unsigned int coords_length) const
   {
-    unsigned int count = hb_min (coords_length, axisCount);
+    unsigned int count = MIN<unsigned int> (coords_length, axisCount);
 
     const SegmentMaps *map = &firstAxisSegmentMaps;
     for (unsigned int i = 0; i < count; i++)

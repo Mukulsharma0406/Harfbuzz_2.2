@@ -123,18 +123,18 @@ hb_unicode_decompose_compatibility_nil (hb_unicode_funcs_t *ufuncs     HB_UNUSED
 }
 
 
-extern "C" hb_unicode_funcs_t *hb_glib_get_unicode_funcs ();
-extern "C" hb_unicode_funcs_t *hb_icu_get_unicode_funcs ();
-extern "C" hb_unicode_funcs_t *hb_ucdn_get_unicode_funcs ();
+extern "C" hb_unicode_funcs_t *hb_glib_get_unicode_funcs (void);
+extern "C" hb_unicode_funcs_t *hb_icu_get_unicode_funcs (void);
+extern "C" hb_unicode_funcs_t *hb_ucdn_get_unicode_funcs (void);
 
 hb_unicode_funcs_t *
-hb_unicode_funcs_get_default ()
+hb_unicode_funcs_get_default (void)
 {
-#if !defined(HB_NO_UNICODE_FUNCS) && defined(HAVE_UCDN)
+#if defined(HAVE_UCDN)
   return hb_ucdn_get_unicode_funcs ();
-#elif !defined(HB_NO_UNICODE_FUNCS) && defined(HAVE_GLIB)
+#elif defined(HAVE_GLIB)
   return hb_glib_get_unicode_funcs ();
-#elif !defined(HB_NO_UNICODE_FUNCS) && defined(HAVE_ICU) && defined(HAVE_ICU_BUILTIN)
+#elif defined(HAVE_ICU) && defined(HAVE_ICU_BUILTIN)
   return hb_icu_get_unicode_funcs ();
 #else
 #define HB_UNICODE_FUNCS_NIL 1
@@ -151,7 +151,7 @@ hb_unicode_funcs_get_default ()
  * hb_unicode_funcs_create: (Xconstructor)
  * @parent: (nullable):
  *
- *
+ * 
  *
  * Return value: (transfer full):
  *
@@ -197,14 +197,14 @@ DEFINE_NULL_INSTANCE (hb_unicode_funcs_t) =
 /**
  * hb_unicode_funcs_get_empty:
  *
- *
+ * 
  *
  * Return value: (transfer full):
  *
  * Since: 0.9.2
  **/
 hb_unicode_funcs_t *
-hb_unicode_funcs_get_empty ()
+hb_unicode_funcs_get_empty (void)
 {
   return const_cast<hb_unicode_funcs_t *> (&Null(hb_unicode_funcs_t));
 }
@@ -213,7 +213,7 @@ hb_unicode_funcs_get_empty ()
  * hb_unicode_funcs_reference: (skip)
  * @ufuncs: Unicode functions.
  *
- *
+ * 
  *
  * Return value: (transfer full):
  *
@@ -229,7 +229,7 @@ hb_unicode_funcs_reference (hb_unicode_funcs_t *ufuncs)
  * hb_unicode_funcs_destroy: (skip)
  * @ufuncs: Unicode functions.
  *
- *
+ * 
  *
  * Since: 0.9.2
  **/
@@ -251,14 +251,14 @@ hb_unicode_funcs_destroy (hb_unicode_funcs_t *ufuncs)
 /**
  * hb_unicode_funcs_set_user_data: (skip)
  * @ufuncs: Unicode functions.
- * @key:
- * @data:
- * @destroy:
- * @replace:
+ * @key: 
+ * @data: 
+ * @destroy: 
+ * @replace: 
  *
+ * 
  *
- *
- * Return value:
+ * Return value: 
  *
  * Since: 0.9.2
  **/
@@ -275,9 +275,9 @@ hb_unicode_funcs_set_user_data (hb_unicode_funcs_t *ufuncs,
 /**
  * hb_unicode_funcs_get_user_data: (skip)
  * @ufuncs: Unicode functions.
- * @key:
+ * @key: 
  *
- *
+ * 
  *
  * Return value: (transfer none):
  *
@@ -295,7 +295,7 @@ hb_unicode_funcs_get_user_data (hb_unicode_funcs_t *ufuncs,
  * hb_unicode_funcs_make_immutable:
  * @ufuncs: Unicode functions.
  *
- *
+ * 
  *
  * Since: 0.9.2
  **/
@@ -312,9 +312,9 @@ hb_unicode_funcs_make_immutable (hb_unicode_funcs_t *ufuncs)
  * hb_unicode_funcs_is_immutable:
  * @ufuncs: Unicode functions.
  *
+ * 
  *
- *
- * Return value:
+ * Return value: 
  *
  * Since: 0.9.2
  **/
@@ -328,9 +328,9 @@ hb_unicode_funcs_is_immutable (hb_unicode_funcs_t *ufuncs)
  * hb_unicode_funcs_get_parent:
  * @ufuncs: Unicode functions.
  *
+ * 
  *
- *
- * Return value:
+ * Return value: 
  *
  * Since: 0.9.2
  **/
@@ -384,13 +384,13 @@ HB_UNICODE_FUNCS_IMPLEMENT_CALLBACKS_SIMPLE
 /**
  * hb_unicode_compose:
  * @ufuncs: Unicode functions.
- * @a:
- * @b:
+ * @a: 
+ * @b: 
  * @ab: (out):
  *
+ * 
  *
- *
- * Return value:
+ * Return value: 
  *
  * Since: 0.9.2
  **/
@@ -406,13 +406,13 @@ hb_unicode_compose (hb_unicode_funcs_t *ufuncs,
 /**
  * hb_unicode_decompose:
  * @ufuncs: Unicode functions.
- * @ab:
+ * @ab: 
  * @a: (out):
  * @b: (out):
  *
+ * 
  *
- *
- * Return value:
+ * Return value: 
  *
  * Since: 0.9.2
  **/
@@ -428,12 +428,12 @@ hb_unicode_decompose (hb_unicode_funcs_t *ufuncs,
 /**
  * hb_unicode_decompose_compatibility:
  * @ufuncs: Unicode functions.
- * @u:
+ * @u: 
  * @decomposed: (out):
  *
+ * 
  *
- *
- * Return value:
+ * Return value: 
  *
  * Since: 0.9.2
  * Deprecated: 2.0.0

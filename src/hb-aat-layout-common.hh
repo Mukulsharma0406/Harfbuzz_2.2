@@ -28,7 +28,6 @@
 #define HB_AAT_LAYOUT_COMMON_HH
 
 #include "hb-aat-layout.hh"
-#include "hb-open-type.hh"
 
 
 namespace AAT {
@@ -48,18 +47,18 @@ struct LookupFormat0
   friend struct Lookup<T>;
 
   private:
-  const T* get_value (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
+  inline const T* get_value (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
   {
     if (unlikely (glyph_id >= num_glyphs)) return nullptr;
     return &arrayZ[glyph_id];
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (arrayZ.sanitize (c, c->get_num_glyphs ()));
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (arrayZ.sanitize (c, c->get_num_glyphs (), base));
@@ -77,17 +76,18 @@ struct LookupFormat0
 template <typename T>
 struct LookupSegmentSingle
 {
-  static constexpr unsigned TerminationWordCount = 2u;
+  enum { TerminationWordCount = 2 };
 
-  int cmp (hb_codepoint_t g) const
-  { return g < first ? -1 : g <= last ? 0 : +1 ; }
+  inline int cmp (hb_codepoint_t g) const {
+    return g < first ? -1 : g <= last ? 0 : +1 ;
+  }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && value.sanitize (c));
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && value.sanitize (c, base));
@@ -106,18 +106,18 @@ struct LookupFormat2
   friend struct Lookup<T>;
 
   private:
-  const T* get_value (hb_codepoint_t glyph_id) const
+  inline const T* get_value (hb_codepoint_t glyph_id) const
   {
     const LookupSegmentSingle<T> *v = segments.bsearch (glyph_id);
     return v ? &v->value : nullptr;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (segments.sanitize (c));
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (segments.sanitize (c, base));
@@ -125,7 +125,7 @@ struct LookupFormat2
 
   protected:
   HBUINT16	format;		/* Format identifier--format = 2 */
-  VarSizedBinSearchArrayOf<LookupSegmentSingle<T>>
+  VarSizedBinSearchArrayOf<LookupSegmentSingle<T> >
 		segments;	/* The actual segments. These must already be sorted,
 				 * according to the first word in each one (the last
 				 * glyph in each segment). */
@@ -136,35 +136,36 @@ struct LookupFormat2
 template <typename T>
 struct LookupSegmentArray
 {
-  static constexpr unsigned TerminationWordCount = 2u;
+  enum { TerminationWordCount = 2 };
 
-  const T* get_value (hb_codepoint_t glyph_id, const void *base) const
+  inline const T* get_value (hb_codepoint_t glyph_id, const void *base) const
   {
     return first <= glyph_id && glyph_id <= last ? &(base+valuesZ)[glyph_id - first] : nullptr;
   }
 
-  int cmp (hb_codepoint_t g) const
-  { return g < first ? -1 : g <= last ? 0 : +1; }
+  inline int cmp (hb_codepoint_t g) const {
+    return g < first ? -1 : g <= last ? 0 : +1 ;
+  }
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
 		  first <= last &&
 		  valuesZ.sanitize (c, base, last - first + 1));
   }
-  template <typename ...Ts>
-  bool sanitize (hb_sanitize_context_t *c, const void *base, Ts&&... ds) const
+  template <typename T2>
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base, T2 user_data) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
 		  first <= last &&
-		  valuesZ.sanitize (c, base, last - first + 1, hb_forward<Ts> (ds)...));
+		  valuesZ.sanitize (c, base, last - first + 1, user_data));
   }
 
   GlyphID	last;		/* Last GlyphID in this segment */
   GlyphID	first;		/* First GlyphID in this segment */
-  NNOffsetTo<UnsizedArrayOf<T>>
+  OffsetTo<UnsizedArrayOf<T>, HBUINT16, false>
 		valuesZ;	/* A 16-bit offset from the start of
 				 * the table to the data. */
   public:
@@ -177,18 +178,18 @@ struct LookupFormat4
   friend struct Lookup<T>;
 
   private:
-  const T* get_value (hb_codepoint_t glyph_id) const
+  inline const T* get_value (hb_codepoint_t glyph_id) const
   {
     const LookupSegmentArray<T> *v = segments.bsearch (glyph_id);
     return v ? v->get_value (glyph_id, this) : nullptr;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (segments.sanitize (c, this));
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (segments.sanitize (c, this, base));
@@ -196,7 +197,7 @@ struct LookupFormat4
 
   protected:
   HBUINT16	format;		/* Format identifier--format = 4 */
-  VarSizedBinSearchArrayOf<LookupSegmentArray<T>>
+  VarSizedBinSearchArrayOf<LookupSegmentArray<T> >
 		segments;	/* The actual segments. These must already be sorted,
 				 * according to the first word in each one (the last
 				 * glyph in each segment). */
@@ -207,16 +208,16 @@ struct LookupFormat4
 template <typename T>
 struct LookupSingle
 {
-  static constexpr unsigned TerminationWordCount = 1u;
+  enum { TerminationWordCount = 1 };
 
-  int cmp (hb_codepoint_t g) const { return glyph.cmp (g); }
+  inline int cmp (hb_codepoint_t g) const { return glyph.cmp (g); }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && value.sanitize (c));
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && value.sanitize (c, base));
@@ -234,18 +235,18 @@ struct LookupFormat6
   friend struct Lookup<T>;
 
   private:
-  const T* get_value (hb_codepoint_t glyph_id) const
+  inline const T* get_value (hb_codepoint_t glyph_id) const
   {
     const LookupSingle<T> *v = entries.bsearch (glyph_id);
     return v ? &v->value : nullptr;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (entries.sanitize (c));
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (entries.sanitize (c, base));
@@ -253,7 +254,7 @@ struct LookupFormat6
 
   protected:
   HBUINT16	format;		/* Format identifier--format = 6 */
-  VarSizedBinSearchArrayOf<LookupSingle<T>>
+  VarSizedBinSearchArrayOf<LookupSingle<T> >
 		entries;	/* The actual entries, sorted by glyph index. */
   public:
   DEFINE_SIZE_ARRAY (8, entries);
@@ -265,18 +266,18 @@ struct LookupFormat8
   friend struct Lookup<T>;
 
   private:
-  const T* get_value (hb_codepoint_t glyph_id) const
+  inline const T* get_value (hb_codepoint_t glyph_id) const
   {
     return firstGlyph <= glyph_id && glyph_id - firstGlyph < glyphCount ?
 	   &valueArrayZ[glyph_id - firstGlyph] : nullptr;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && valueArrayZ.sanitize (c, glyphCount));
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && valueArrayZ.sanitize (c, glyphCount, base));
@@ -300,7 +301,7 @@ struct LookupFormat10
   friend struct Lookup<T>;
 
   private:
-  const typename T::type get_value_or_null (hb_codepoint_t glyph_id) const
+  inline const typename T::type get_value_or_null (hb_codepoint_t glyph_id) const
   {
     if (!(firstGlyph <= glyph_id && glyph_id - firstGlyph < glyphCount))
       return Null(T);
@@ -315,7 +316,7 @@ struct LookupFormat10
     return v;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -339,7 +340,7 @@ struct LookupFormat10
 template <typename T>
 struct Lookup
 {
-  const T* get_value (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
+  inline const T* get_value (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
   {
     switch (u.format) {
     case 0: return u.format0.get_value (glyph_id, num_glyphs);
@@ -351,7 +352,7 @@ struct Lookup
     }
   }
 
-  const typename T::type get_value_or_null (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
+  inline const typename T::type get_value_or_null (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
   {
     switch (u.format) {
       /* Format 10 cannot return a pointer. */
@@ -362,15 +363,15 @@ struct Lookup
     }
   }
 
-  typename T::type get_class (hb_codepoint_t glyph_id,
-			      unsigned int num_glyphs,
-			      unsigned int outOfRange) const
+  inline typename T::type get_class (hb_codepoint_t glyph_id,
+				     unsigned int num_glyphs,
+				     unsigned int outOfRange) const
   {
     const T *v = get_value (glyph_id, num_glyphs);
     return v ? *v : outOfRange;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (!u.format.sanitize (c)) return_trace (false);
@@ -384,7 +385,7 @@ struct Lookup
     default:return_trace (true);
     }
   }
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     if (!u.format.sanitize (c)) return_trace (false);
@@ -394,7 +395,7 @@ struct Lookup
     case 4: return_trace (u.format4.sanitize (c, base));
     case 6: return_trace (u.format6.sanitize (c, base));
     case 8: return_trace (u.format8.sanitize (c, base));
-    case 10: return_trace (false); /* We don't support format10 here currently. */
+    case 10: return_trace (false); /* No need to support format10 apparently */
     default:return_trace (true);
     }
   }
@@ -418,11 +419,18 @@ struct Lookup
 } /* Close namespace. */
 /* Ugly hand-coded null objects for template Lookup<> :(. */
 extern HB_INTERNAL const unsigned char _hb_Null_AAT_Lookup[2];
-template <typename T>
-struct Null<AAT::Lookup<T>> {
-  static AAT::Lookup<T> const & get_null ()
-  { return *reinterpret_cast<const AAT::Lookup<T> *> (_hb_Null_AAT_Lookup); }
-};
+template <>
+/*static*/ inline const AAT::Lookup<OT::HBUINT16>& Null<AAT::Lookup<OT::HBUINT16> > (void) {
+  return *reinterpret_cast<const AAT::Lookup<OT::HBUINT16> *> (_hb_Null_AAT_Lookup);
+}
+template <>
+/*static*/ inline const AAT::Lookup<OT::HBUINT32>& Null<AAT::Lookup<OT::HBUINT32> > (void) {
+  return *reinterpret_cast<const AAT::Lookup<OT::HBUINT32> *> (_hb_Null_AAT_Lookup);
+}
+template <>
+/*static*/ inline const AAT::Lookup<OT::Offset<OT::HBUINT16, false> >& Null<AAT::Lookup<OT::Offset<OT::HBUINT16, false> > > (void) {
+  return *reinterpret_cast<const AAT::Lookup<OT::Offset<OT::HBUINT16, false> > *> (_hb_Null_AAT_Lookup);
+}
 namespace AAT {
 
 enum { DELETED_GLYPH = 0xFFFF };
@@ -434,7 +442,7 @@ enum { DELETED_GLYPH = 0xFFFF };
 template <typename T>
 struct Entry
 {
-  bool sanitize (hb_sanitize_context_t *c, unsigned int count) const
+  inline bool sanitize (hb_sanitize_context_t *c, unsigned int count) const
   {
     TRACE_SANITIZE (this);
     /* Note, we don't recurse-sanitize data because we don't access it.
@@ -462,7 +470,7 @@ struct Entry
 template <>
 struct Entry<void>
 {
-  bool sanitize (hb_sanitize_context_t *c, unsigned int count /*XXX Unused?*/) const
+  inline bool sanitize (hb_sanitize_context_t *c, unsigned int count /*XXX Unused?*/) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -495,22 +503,23 @@ struct StateTable
     CLASS_END_OF_LINE = 3,
   };
 
-  int new_state (unsigned int newState) const
-  { return Types::extended ? newState : ((int) newState - (int) stateArrayTable) / (int) nClasses; }
+  inline int new_state (unsigned int newState) const
+  { return Types::extended ? newState : ((int) newState - (int) stateArrayTable) / nClasses; }
 
-  unsigned int get_class (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
+  inline unsigned int get_class (hb_codepoint_t glyph_id, unsigned int num_glyphs) const
   {
     if (unlikely (glyph_id == DELETED_GLYPH)) return CLASS_DELETED_GLYPH;
     return (this+classTable).get_class (glyph_id, num_glyphs, 1);
   }
 
-  const Entry<Extra> *get_entries () const
-  { return (this+entryTable).arrayZ; }
-
-  const Entry<Extra> &get_entry (int state, unsigned int klass) const
+  inline const Entry<Extra> *get_entries () const
   {
-    if (unlikely (klass >= nClasses))
-      klass = StateTable<Types, Entry<Extra>>::CLASS_OUT_OF_BOUNDS;
+    return (this+entryTable).arrayZ;
+  }
+
+  inline const Entry<Extra> *get_entryZ (int state, unsigned int klass) const
+  {
+    if (unlikely (klass >= nClasses)) return nullptr;
 
     const HBUSHORT *states = (this+stateArrayTable).arrayZ;
     const Entry<Extra> *entries = (this+entryTable).arrayZ;
@@ -518,15 +527,14 @@ struct StateTable
     unsigned int entry = states[state * nClasses + klass];
     DEBUG_MSG (APPLY, nullptr, "e%u", entry);
 
-    return entries[entry];
+    return &entries[entry];
   }
 
-  bool sanitize (hb_sanitize_context_t *c,
-		 unsigned int *num_entries_out = nullptr) const
+  inline bool sanitize (hb_sanitize_context_t *c,
+			unsigned int *num_entries_out = nullptr) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!(c->check_struct (this) &&
-		    nClasses >= 4 /* Ensure pre-defined classes fit.  */ &&
 		    classTable.sanitize (c, this)))) return_trace (false);
 
     const HBUSHORT *states = (this+stateArrayTable).arrayZ;
@@ -569,14 +577,14 @@ struct StateTable
 				       -min_state,
 				       row_stride)))
 	  return_trace (false);
-	if ((c->max_ops -= state_neg - min_state) <= 0)
+	if ((c->max_ops -= state_neg - min_state) < 0)
 	  return_trace (false);
 	{ /* Sweep new states. */
 	  const HBUSHORT *stop = &states[min_state * num_classes];
 	  if (unlikely (stop > states))
 	    return_trace (false);
 	  for (const HBUSHORT *p = states; stop < p; p--)
-	    num_entries = hb_max (num_entries, *(p - 1) + 1);
+	    num_entries = MAX<unsigned int> (num_entries, *(p - 1) + 1);
 	  state_neg = min_state;
 	}
       }
@@ -588,7 +596,7 @@ struct StateTable
 				       max_state + 1,
 				       row_stride)))
 	  return_trace (false);
-	if ((c->max_ops -= max_state - state_pos + 1) <= 0)
+	if ((c->max_ops -= max_state - state_pos + 1) < 0)
 	  return_trace (false);
 	{ /* Sweep new states. */
 	  if (unlikely (hb_unsigned_mul_overflows ((max_state + 1), num_classes)))
@@ -597,22 +605,22 @@ struct StateTable
 	  if (unlikely (stop < states))
 	    return_trace (false);
 	  for (const HBUSHORT *p = &states[state_pos * num_classes]; p < stop; p++)
-	    num_entries = hb_max (num_entries, *p + 1);
+	    num_entries = MAX<unsigned int> (num_entries, *p + 1);
 	  state_pos = max_state + 1;
 	}
       }
 
       if (unlikely (!c->check_array (entries, num_entries)))
 	return_trace (false);
-      if ((c->max_ops -= num_entries - entry) <= 0)
+      if ((c->max_ops -= num_entries - entry) < 0)
 	return_trace (false);
       { /* Sweep new entries. */
 	const Entry<Extra> *stop = &entries[num_entries];
 	for (const Entry<Extra> *p = &entries[entry]; p < stop; p++)
 	{
 	  int newState = new_state (p->newState);
-	  min_state = hb_min (min_state, newState);
-	  max_state = hb_max (max_state, newState);
+	  min_state = MIN (min_state, newState);
+	  max_state = MAX (max_state, newState);
 	}
 	entry = num_entries;
       }
@@ -627,11 +635,11 @@ struct StateTable
   protected:
   HBUINT	nClasses;	/* Number of classes, which is the number of indices
 				 * in a single line in the state array. */
-  NNOffsetTo<ClassType, HBUINT>
+  OffsetTo<ClassType, HBUINT, false>
 		classTable;	/* Offset to the class table. */
-  NNOffsetTo<UnsizedArrayOf<HBUSHORT>, HBUINT>
+  OffsetTo<UnsizedArrayOf<HBUSHORT>, HBUINT, false>
 		stateArrayTable;/* Offset to the state array. */
-  NNOffsetTo<UnsizedArrayOf<Entry<Extra>>, HBUINT>
+  OffsetTo<UnsizedArrayOf<Entry<Extra> >, HBUINT, false>
 		entryTable;	/* Offset to the entry array. */
 
   public:
@@ -641,18 +649,18 @@ struct StateTable
 template <typename HBUCHAR>
 struct ClassTable
 {
-  unsigned int get_class (hb_codepoint_t glyph_id, unsigned int outOfRange) const
+  inline unsigned int get_class (hb_codepoint_t glyph_id, unsigned int outOfRange) const
   {
     unsigned int i = glyph_id - firstGlyph;
     return i >= classArray.len ? outOfRange : classArray.arrayZ[i];
   }
-  unsigned int get_class (hb_codepoint_t glyph_id,
-			  unsigned int num_glyphs HB_UNUSED,
-			  unsigned int outOfRange) const
+  inline unsigned int get_class (hb_codepoint_t glyph_id,
+				 unsigned int num_glyphs HB_UNUSED,
+				 unsigned int outOfRange) const
   {
     return get_class (glyph_id, outOfRange);
   }
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && classArray.sanitize (c));
@@ -667,60 +675,60 @@ struct ClassTable
 
 struct ObsoleteTypes
 {
-  static constexpr bool extended = false;
+  static const bool extended = false;
   typedef HBUINT16 HBUINT;
   typedef HBUINT8 HBUSHORT;
   typedef ClassTable<HBUINT8> ClassTypeNarrow;
   typedef ClassTable<HBUINT16> ClassTypeWide;
 
   template <typename T>
-  static unsigned int offsetToIndex (unsigned int offset,
-				     const void *base,
-				     const T *array)
+  static inline unsigned int offsetToIndex (unsigned int offset,
+					    const void *base,
+					    const T *array)
   {
     return (offset - ((const char *) array - (const char *) base)) / sizeof (T);
   }
   template <typename T>
-  static unsigned int byteOffsetToIndex (unsigned int offset,
-					 const void *base,
-					 const T *array)
+  static inline unsigned int byteOffsetToIndex (unsigned int offset,
+						const void *base,
+						const T *array)
   {
     return offsetToIndex (offset, base, array);
   }
   template <typename T>
-  static unsigned int wordOffsetToIndex (unsigned int offset,
-					 const void *base,
-					 const T *array)
+  static inline unsigned int wordOffsetToIndex (unsigned int offset,
+						const void *base,
+						const T *array)
   {
     return offsetToIndex (2 * offset, base, array);
   }
 };
 struct ExtendedTypes
 {
-  static constexpr bool extended = true;
+  static const bool extended = true;
   typedef HBUINT32 HBUINT;
   typedef HBUINT16 HBUSHORT;
   typedef Lookup<HBUINT16> ClassTypeNarrow;
   typedef Lookup<HBUINT16> ClassTypeWide;
 
   template <typename T>
-  static unsigned int offsetToIndex (unsigned int offset,
-				     const void *base HB_UNUSED,
-				     const T *array HB_UNUSED)
+  static inline unsigned int offsetToIndex (unsigned int offset,
+					    const void *base,
+					    const T *array)
   {
     return offset;
   }
   template <typename T>
-  static unsigned int byteOffsetToIndex (unsigned int offset,
-					 const void *base HB_UNUSED,
-					 const T *array HB_UNUSED)
+  static inline unsigned int byteOffsetToIndex (unsigned int offset,
+						const void *base,
+						const T *array)
   {
     return offset / 2;
   }
   template <typename T>
-  static unsigned int wordOffsetToIndex (unsigned int offset,
-					 const void *base HB_UNUSED,
-					 const T *array HB_UNUSED)
+  static inline unsigned int wordOffsetToIndex (unsigned int offset,
+						const void *base,
+						const T *array)
   {
     return offset;
   }
@@ -729,27 +737,30 @@ struct ExtendedTypes
 template <typename Types, typename EntryData>
 struct StateTableDriver
 {
-  StateTableDriver (const StateTable<Types, EntryData> &machine_,
-		    hb_buffer_t *buffer_,
-		    hb_face_t *face_) :
+  inline StateTableDriver (const StateTable<Types, EntryData> &machine_,
+			   hb_buffer_t *buffer_,
+			   hb_face_t *face_) :
 	      machine (machine_),
 	      buffer (buffer_),
 	      num_glyphs (face_->get_num_glyphs ()) {}
 
   template <typename context_t>
-  void drive (context_t *c)
+  inline void drive (context_t *c)
   {
     if (!c->in_place)
       buffer->clear_output ();
 
     int state = StateTable<Types, EntryData>::STATE_START_OF_TEXT;
+    bool last_was_dont_advance = false;
     for (buffer->idx = 0; buffer->successful;)
     {
       unsigned int klass = buffer->idx < buffer->len ?
 			   machine.get_class (buffer->info[buffer->idx].codepoint, num_glyphs) :
 			   (unsigned) StateTable<Types, EntryData>::CLASS_END_OF_TEXT;
       DEBUG_MSG (APPLY, nullptr, "c%u at %u", klass, buffer->idx);
-      const Entry<EntryData> &entry = machine.get_entry (state, klass);
+      const Entry<EntryData> *entry = machine.get_entryZ (state, klass);
+      if (unlikely (!entry))
+	break;
 
       /* Unsafe-to-break before this if not in state 0, as things might
        * go differently if we start from state 0 here.
@@ -760,28 +771,31 @@ struct StateTableDriver
 	/* If there's no action and we're just epsilon-transitioning to state 0,
 	 * safe to break. */
 	if (c->is_actionable (this, entry) ||
-	    !(entry.newState == StateTable<Types, EntryData>::STATE_START_OF_TEXT &&
-	      entry.flags == context_t::DontAdvance))
+	    !(entry->newState == StateTable<Types, EntryData>::STATE_START_OF_TEXT &&
+	      entry->flags == context_t::DontAdvance))
 	  buffer->unsafe_to_break_from_outbuffer (buffer->backtrack_len () - 1, buffer->idx + 1);
       }
 
       /* Unsafe-to-break if end-of-text would kick in here. */
       if (buffer->idx + 2 <= buffer->len)
       {
-	const Entry<EntryData> &end_entry = machine.get_entry (state, StateTable<Types, EntryData>::CLASS_END_OF_TEXT);
+	const Entry<EntryData> *end_entry = machine.get_entryZ (state, 0);
 	if (c->is_actionable (this, end_entry))
 	  buffer->unsafe_to_break (buffer->idx, buffer->idx + 2);
       }
 
-      c->transition (this, entry);
+      if (unlikely (!c->transition (this, entry)))
+	break;
 
-      state = machine.new_state (entry.newState);
+      last_was_dont_advance = (entry->flags & context_t::DontAdvance) && buffer->max_ops-- > 0;
+
+      state = machine.new_state (entry->newState);
       DEBUG_MSG (APPLY, nullptr, "s%d", state);
 
       if (buffer->idx == buffer->len)
 	break;
 
-      if (!(entry.flags & context_t::DontAdvance) || buffer->max_ops-- <= 0)
+      if (!last_was_dont_advance)
 	buffer->next_glyph ();
     }
 
@@ -805,10 +819,10 @@ struct ankr;
 struct hb_aat_apply_context_t :
        hb_dispatch_context_t<hb_aat_apply_context_t, bool, HB_DEBUG_APPLY>
 {
-  const char *get_name () { return "APPLY"; }
+  inline const char *get_name (void) { return "APPLY"; }
   template <typename T>
-  return_t dispatch (const T &obj) { return obj.apply (this); }
-  static return_t default_return_value () { return false; }
+  inline return_t dispatch (const T &obj) { return obj.apply (this); }
+  static return_t default_return_value (void) { return false; }
   bool stop_sublookup_iteration (return_t r) const { return r; }
 
   const hb_ot_shape_plan_t *plan;
@@ -817,6 +831,7 @@ struct hb_aat_apply_context_t :
   hb_buffer_t *buffer;
   hb_sanitize_context_t sanitizer;
   const ankr *ankr_table;
+  const char *ankr_end;
 
   /* Unused. For debug tracing only. */
   unsigned int lookup_index;
@@ -827,11 +842,11 @@ struct hb_aat_apply_context_t :
 				      hb_buffer_t *buffer_,
 				      hb_blob_t *blob = const_cast<hb_blob_t *> (&Null(hb_blob_t)));
 
-  HB_INTERNAL ~hb_aat_apply_context_t ();
+  HB_INTERNAL ~hb_aat_apply_context_t (void);
 
-  HB_INTERNAL void set_ankr_table (const AAT::ankr *ankr_table_);
+  HB_INTERNAL void set_ankr_table (const AAT::ankr *ankr_table_, const char *ankr_end_);
 
-  void set_lookup_index (unsigned int i) { lookup_index = i; }
+  inline void set_lookup_index (unsigned int i) { lookup_index = i; }
 };
 
 

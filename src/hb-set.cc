@@ -47,7 +47,7 @@
  * Since: 0.9.2
  **/
 hb_set_t *
-hb_set_create ()
+hb_set_create (void)
 {
   hb_set_t *set;
 
@@ -67,7 +67,7 @@ hb_set_create ()
  * Since: 0.9.2
  **/
 hb_set_t *
-hb_set_get_empty ()
+hb_set_get_empty (void)
 {
   return const_cast<hb_set_t *> (&Null(hb_set_t));
 }

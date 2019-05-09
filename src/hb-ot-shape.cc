@@ -189,7 +189,7 @@ hb_ot_shape_plan_t::init0 (hb_face_t                     *face,
 }
 
 void
-hb_ot_shape_plan_t::fini ()
+hb_ot_shape_plan_t::fini (void)
 {
   if (shaper->data_destroy)
     shaper->data_destroy (const_cast<void *> (data));
@@ -309,6 +309,9 @@ hb_ot_shape_collect_features (hb_ot_shape_planner_t          *planner,
     map->enable_feature (HB_TAG ('v','e','r','t'), F_GLOBAL_SEARCH);
   }
 
+  if (planner->shaper->override_features)
+    planner->shaper->override_features (planner);
+
   for (unsigned int i = 0; i < num_user_features; i++)
   {
     const hb_feature_t *feature = &user_features[i];
@@ -327,9 +330,6 @@ hb_ot_shape_collect_features (hb_ot_shape_planner_t          *planner,
       aat_map->add_feature (feature->tag, feature->value);
     }
   }
-
-  if (planner->shaper->override_features)
-    planner->shaper->override_features (planner);
 }
 
 
@@ -428,29 +428,12 @@ hb_set_unicode_props (hb_buffer_t *buffer)
 	_hb_glyph_info_set_continuation (&info[i]);
       }
     }
-    /* Or part of the Other_Grapheme_Extend that is not marks.
-     * As of Unicode 11 that is just:
-     *
-     * 200C          ; Other_Grapheme_Extend # Cf       ZERO WIDTH NON-JOINER
-     * FF9E..FF9F    ; Other_Grapheme_Extend # Lm   [2] HALFWIDTH KATAKANA VOICED SOUND MARK..HALFWIDTH KATAKANA SEMI-VOICED SOUND MARK
-     * E0020..E007F  ; Other_Grapheme_Extend # Cf  [96] TAG SPACE..CANCEL TAG
-     *
-     * ZWNJ is special, we don't want to merge it as there's no need, and keeping
-     * it separate results in more granular clusters.  Ignore Katakana for now.
-     * Tags are used for Emoji sub-region flag sequences:
-     * https://github.com/harfbuzz/harfbuzz/issues/1556
-     */
-    else if (unlikely (hb_in_range<hb_codepoint_t> (info[i].codepoint, 0xE0020u, 0xE007Fu)))
-      _hb_glyph_info_set_continuation (&info[i]);
   }
 }
 
 static void
 hb_insert_dotted_circle (hb_buffer_t *buffer, hb_font_t *font)
 {
-  if (unlikely (buffer->flags & HB_BUFFER_FLAG_DO_NOT_INSERT_DOTTED_CIRCLE))
-    return;
-
   if (!(buffer->flags & HB_BUFFER_FLAG_BOT) ||
       buffer->context_len[0] ||
       !_hb_glyph_info_is_unicode_mark (&buffer->info[0]))
@@ -908,8 +891,7 @@ hb_ot_position_complex (const hb_ot_shape_context_t *c)
 					&pos[i].y_offset);
 
   if (c->plan->fallback_mark_positioning)
-    _hb_ot_shape_fallback_mark_position (c->plan, c->font, c->buffer,
-					 adjust_offsets_when_zeroing);
+    _hb_ot_shape_fallback_mark_position (c->plan, c->font, c->buffer);
 }
 
 static inline void
@@ -962,12 +944,12 @@ hb_ot_shape_internal (hb_ot_shape_context_t *c)
   c->buffer->scratch_flags = HB_BUFFER_SCRATCH_FLAG_DEFAULT;
   if (likely (!hb_unsigned_mul_overflows (c->buffer->len, HB_BUFFER_MAX_LEN_FACTOR)))
   {
-    c->buffer->max_len = hb_max (c->buffer->len * HB_BUFFER_MAX_LEN_FACTOR,
+    c->buffer->max_len = MAX (c->buffer->len * HB_BUFFER_MAX_LEN_FACTOR,
 			      (unsigned) HB_BUFFER_MAX_LEN_MIN);
   }
   if (likely (!hb_unsigned_mul_overflows (c->buffer->len, HB_BUFFER_MAX_OPS_FACTOR)))
   {
-    c->buffer->max_ops = hb_max (c->buffer->len * HB_BUFFER_MAX_OPS_FACTOR,
+    c->buffer->max_ops = MAX (c->buffer->len * HB_BUFFER_MAX_OPS_FACTOR,
 			      (unsigned) HB_BUFFER_MAX_OPS_MIN);
   }
 

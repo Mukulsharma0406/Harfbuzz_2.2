@@ -47,7 +47,7 @@ struct hb_shaper_entry_t {
 };
 
 HB_INTERNAL const hb_shaper_entry_t *
-_hb_shapers_get ();
+_hb_shapers_get (void);
 
 
 template <typename Data, unsigned int WheresData, typename T>
@@ -96,10 +96,10 @@ template <enum hb_shaper_order_t order, typename Object> struct hb_shaper_object
 				   hb_##object##_t, WheresData> \
 	{ \
 	  typedef HB_SHAPER_DATA_TYPE(shaper, object) Type; \
-	  static Type* create (hb_##object##_t *data) \
+	  static inline Type* create (hb_##object##_t *data) \
 	  { return HB_SHAPER_DATA_CREATE_FUNC (shaper, object) (data); } \
-	  static Type *get_null () { return nullptr; } \
-	  static void destroy (Type *p) { HB_SHAPER_DATA_DESTROY_FUNC (shaper, object) (p); } \
+	  static inline Type *get_null (void) { return nullptr; } \
+	  static inline void destroy (Type *p) { HB_SHAPER_DATA_DESTROY_FUNC (shaper, object) (p); } \
 	}; \
 	\
 	static_assert (true, "") /* Require semicolon. */
@@ -108,14 +108,14 @@ template <enum hb_shaper_order_t order, typename Object> struct hb_shaper_object
 template <typename Object>
 struct hb_shaper_object_dataset_t
 {
-  void init0 (Object *parent_data)
+  inline void init0 (Object *parent_data)
   {
     this->parent_data = parent_data;
 #define HB_SHAPER_IMPLEMENT(shaper) shaper.init0 ();
 #include "hb-shaper-list.hh"
 #undef HB_SHAPER_IMPLEMENT
   }
-  void fini ()
+  inline void fini (void)
   {
 #define HB_SHAPER_IMPLEMENT(shaper) shaper.fini ();
 #include "hb-shaper-list.hh"

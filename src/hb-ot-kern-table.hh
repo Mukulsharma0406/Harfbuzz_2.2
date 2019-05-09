@@ -44,12 +44,12 @@ namespace OT {
 template <typename KernSubTableHeader>
 struct KernSubTableFormat3
 {
-  int get_kerning (hb_codepoint_t left, hb_codepoint_t right) const
+  inline int get_kerning (hb_codepoint_t left, hb_codepoint_t right) const
   {
     hb_array_t<const FWORD> kernValue = kernValueZ.as_array (kernValueCount);
-    hb_array_t<const HBUINT8> leftClass = StructAfter<const UnsizedArrayOf<HBUINT8>> (kernValue).as_array (glyphCount);
-    hb_array_t<const HBUINT8> rightClass = StructAfter<const UnsizedArrayOf<HBUINT8>> (leftClass).as_array (glyphCount);
-    hb_array_t<const HBUINT8> kernIndex = StructAfter<const UnsizedArrayOf<HBUINT8>> (rightClass).as_array (leftClassCount * rightClassCount);
+    hb_array_t<const HBUINT8> leftClass = StructAfter<const UnsizedArrayOf<HBUINT8> > (kernValue).as_array (glyphCount);
+    hb_array_t<const HBUINT8> rightClass = StructAfter<const UnsizedArrayOf<HBUINT8> > (leftClass).as_array (glyphCount);
+    hb_array_t<const HBUINT8> kernIndex = StructAfter<const UnsizedArrayOf<HBUINT8> > (rightClass).as_array (leftClassCount * rightClassCount);
 
     unsigned int leftC = leftClass[left];
     unsigned int rightC = rightClass[right];
@@ -59,7 +59,7 @@ struct KernSubTableFormat3
     return kernValue[kernIndex[i]];
   }
 
-  bool apply (AAT::hb_aat_apply_context_t *c) const
+  inline bool apply (AAT::hb_aat_apply_context_t *c) const
   {
     TRACE_APPLY (this);
 
@@ -75,7 +75,7 @@ struct KernSubTableFormat3
     return_trace (true);
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -109,10 +109,10 @@ struct KernSubTableFormat3
 template <typename KernSubTableHeader>
 struct KernSubTable
 {
-  unsigned int get_size () const { return u.header.length; }
-  unsigned int get_type () const { return u.header.format; }
+  inline unsigned int get_size (void) const { return u.header.length; }
+  inline unsigned int get_type (void) const { return u.header.format; }
 
-  int get_kerning (hb_codepoint_t left, hb_codepoint_t right) const
+  inline int get_kerning (hb_codepoint_t left, hb_codepoint_t right) const
   {
     switch (get_type ()) {
     /* This method hooks up to hb_font_t's get_h_kerning.  Only support Format0. */
@@ -121,21 +121,21 @@ struct KernSubTable
     }
   }
 
-  template <typename context_t, typename ...Ts>
-  typename context_t::return_t dispatch (context_t *c, Ts&&... ds) const
+  template <typename context_t>
+  inline typename context_t::return_t dispatch (context_t *c) const
   {
     unsigned int subtable_type = get_type ();
     TRACE_DISPATCH (this, subtable_type);
     switch (subtable_type) {
     case 0:	return_trace (c->dispatch (u.format0));
-    case 1:	return_trace (u.header.apple ? c->dispatch (u.format1, hb_forward<Ts> (ds)...) : c->default_return_value ());
+    case 1:	return_trace (u.header.apple ? c->dispatch (u.format1) : c->default_return_value ());
     case 2:	return_trace (c->dispatch (u.format2));
-    case 3:	return_trace (u.header.apple ? c->dispatch (u.format3, hb_forward<Ts> (ds)...) : c->default_return_value ());
+    case 3:	return_trace (u.header.apple ? c->dispatch (u.format3) : c->default_return_value ());
     default:	return_trace (c->default_return_value ());
     }
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!u.header.sanitize (c) ||
@@ -160,11 +160,11 @@ struct KernSubTable
 
 struct KernOTSubTableHeader
 {
-  static constexpr bool apple = false;
+  static const bool apple = false;
   typedef AAT::ObsoleteTypes Types;
 
-  unsigned int tuple_count () const { return 0; }
-  bool is_horizontal () const { return (coverage & Horizontal); }
+  inline unsigned int tuple_count (void) const { return 0; }
+  inline bool is_horizontal (void) const { return (coverage & Horizontal); }
 
   enum Coverage
   {
@@ -178,7 +178,7 @@ struct KernOTSubTableHeader
     Variation	= 0x00u,
   };
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -197,8 +197,8 @@ struct KernOT : AAT::KerxTable<KernOT>
 {
   friend struct AAT::KerxTable<KernOT>;
 
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_kern;
-  static constexpr unsigned minVersion = 0u;
+  static const hb_tag_t tableTag = HB_OT_TAG_kern;
+  static const uint16_t minVersion = 0;
 
   typedef KernOTSubTableHeader SubTableHeader;
   typedef SubTableHeader::Types Types;
@@ -215,11 +215,11 @@ struct KernOT : AAT::KerxTable<KernOT>
 
 struct KernAATSubTableHeader
 {
-  static constexpr bool apple = true;
+  static const bool apple = true;
   typedef AAT::ObsoleteTypes Types;
 
-  unsigned int tuple_count () const { return 0; }
-  bool is_horizontal () const       { return !(coverage & Vertical); }
+  inline unsigned int tuple_count (void) const { return 0; }
+  inline bool is_horizontal (void) const { return !(coverage & Vertical); }
 
   enum Coverage
   {
@@ -231,7 +231,7 @@ struct KernAATSubTableHeader
     Backwards	= 0x00u,
   };
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -252,8 +252,8 @@ struct KernAAT : AAT::KerxTable<KernAAT>
 {
   friend struct AAT::KerxTable<KernAAT>;
 
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_kern;
-  static constexpr unsigned minVersion = 0x00010000u;
+  static const hb_tag_t tableTag = HB_OT_TAG_kern;
+  static const uint32_t minVersion = 0x00010000u;
 
   typedef KernAATSubTableHeader SubTableHeader;
   typedef SubTableHeader::Types Types;
@@ -269,12 +269,12 @@ struct KernAAT : AAT::KerxTable<KernAAT>
 
 struct kern
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_kern;
+  static const hb_tag_t tableTag = HB_OT_TAG_kern;
 
-  bool has_data () const { return u.version32; }
-  unsigned int get_type () const { return u.major; }
+  inline bool has_data (void) const { return u.version32; }
+  inline unsigned int get_type (void) const { return u.major; }
 
-  bool has_state_machine () const
+  inline bool has_state_machine (void) const
   {
     switch (get_type ()) {
     case 0: return u.ot.has_state_machine ();
@@ -283,7 +283,7 @@ struct kern
     }
   }
 
-  bool has_cross_stream () const
+  inline bool has_cross_stream (void) const
   {
     switch (get_type ()) {
     case 0: return u.ot.has_cross_stream ();
@@ -292,7 +292,7 @@ struct kern
     }
   }
 
-  int get_h_kerning (hb_codepoint_t left, hb_codepoint_t right) const
+  inline int get_h_kerning (hb_codepoint_t left, hb_codepoint_t right) const
   {
     switch (get_type ()) {
     case 0: return u.ot.get_h_kerning (left, right);
@@ -301,22 +301,22 @@ struct kern
     }
   }
 
-  bool apply (AAT::hb_aat_apply_context_t *c) const
+  inline bool apply (AAT::hb_aat_apply_context_t *c) const
   { return dispatch (c); }
 
-  template <typename context_t, typename ...Ts>
-  typename context_t::return_t dispatch (context_t *c, Ts&&... ds) const
+  template <typename context_t>
+  inline typename context_t::return_t dispatch (context_t *c) const
   {
     unsigned int subtable_type = get_type ();
     TRACE_DISPATCH (this, subtable_type);
     switch (subtable_type) {
-    case 0:	return_trace (c->dispatch (u.ot, hb_forward<Ts> (ds)...));
-    case 1:	return_trace (c->dispatch (u.aat, hb_forward<Ts> (ds)...));
+    case 0:	return_trace (c->dispatch (u.ot));
+    case 1:	return_trace (c->dispatch (u.aat));
     default:	return_trace (c->default_return_value ());
     }
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (!u.version32.sanitize (c)) return_trace (false);

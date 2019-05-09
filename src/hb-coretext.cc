@@ -100,7 +100,7 @@ _hb_cg_font_release (void *data)
 
 
 static CTFontDescriptorRef
-get_last_resort_font_desc ()
+get_last_resort_font_desc (void)
 {
   // TODO Handle allocation failures?
   CTFontDescriptorRef last_resort = CTFontDescriptorCreateWithNameAndSize (CFSTR("LastResort"), 0);
@@ -171,7 +171,7 @@ create_ct_font (CGFontRef cg_font, CGFloat font_size)
   if (CFStringHasPrefix (cg_postscript_name, CFSTR (".SFNSText")) ||
       CFStringHasPrefix (cg_postscript_name, CFSTR (".SFNSDisplay")))
   {
-#if !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && MAC_OS_X_VERSION_MIN_REQUIRED < 1080
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1080
 # define kCTFontUIFontSystem kCTFontSystemFontType
 # define kCTFontUIFontEmphasizedSystem kCTFontEmphasizedSystemFontType
 #endif
@@ -214,7 +214,7 @@ create_ct_font (CGFontRef cg_font, CGFloat font_size)
   }
 
   CFURLRef original_url = nullptr;
-#if !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+#if TARGET_OS_OSX && MAC_OS_X_VERSION_MIN_REQUIRED < 1060
   ATSFontRef atsFont;
   FSRef fsref;
   OSStatus status;
@@ -244,7 +244,7 @@ create_ct_font (CGFontRef cg_font, CGFloat font_size)
        * process in Blink. This can be detected by the new file URL location
        * that the newly found font points to. */
       CFURLRef new_url = nullptr;
-#if !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+#if TARGET_OS_OSX && MAC_OS_X_VERSION_MIN_REQUIRED < 1060
       atsFont = CTFontGetPlatformFont (new_ct_font, NULL);
       status = ATSFontGetFileReference (atsFont, &fsref);
       if (status == noErr)
@@ -410,7 +410,7 @@ struct active_feature_t {
   feature_record_t rec;
   unsigned int order;
 
-  HB_INTERNAL static int cmp (const void *pa, const void *pb) {
+  static int cmp (const void *pa, const void *pb) {
     const active_feature_t *a = (const active_feature_t *) pa;
     const active_feature_t *b = (const active_feature_t *) pb;
     return a->rec.feature < b->rec.feature ? -1 : a->rec.feature > b->rec.feature ? 1 :
@@ -428,7 +428,7 @@ struct feature_event_t {
   bool start;
   active_feature_t feature;
 
-  HB_INTERNAL static int cmp (const void *pa, const void *pb) {
+  static int cmp (const void *pa, const void *pb) {
     const feature_event_t *a = (const feature_event_t *) pa;
     const feature_event_t *b = (const feature_event_t *) pb;
     return a->index < b->index ? -1 : a->index > b->index ? 1 :
@@ -527,7 +527,7 @@ _hb_coretext_shape (hb_shape_plan_t    *shape_plan,
     /* Scan events and save features for each range. */
     hb_vector_t<active_feature_t> active_features;
     unsigned int last_index = 0;
-    for (unsigned int i = 0; i < feature_events.length; i++)
+    for (unsigned int i = 0; i < feature_events.len; i++)
     {
       feature_event_t *event = &feature_events[i];
 
@@ -536,13 +536,13 @@ _hb_coretext_shape (hb_shape_plan_t    *shape_plan,
         /* Save a snapshot of active features and the range. */
 	range_record_t *range = range_records.push ();
 
-	if (active_features.length)
+	if (active_features.len)
 	{
 	  CFMutableArrayRef features_array = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
 
 	  /* TODO sort and resolve conflicting features? */
 	  /* active_features.qsort (); */
-	  for (unsigned int j = 0; j < active_features.length; j++)
+	  for (unsigned int j = 0; j < active_features.len; j++)
 	  {
 	    CFStringRef keys[] = {
 	      kCTFontFeatureTypeIdentifierKey,
@@ -598,7 +598,7 @@ _hb_coretext_shape (hb_shape_plan_t    *shape_plan,
       } else {
         active_feature_t *feature = active_features.find (&event->feature);
 	if (feature)
-	  active_features.remove (feature - active_features.arrayZ ());
+	  active_features.remove (feature - active_features);
       }
     }
   }
@@ -711,7 +711,7 @@ resize_and_retry:
 /* What's the iOS equivalent of this check?
  * The symbols was introduced in iOS 7.0.
  * At any rate, our fallback is safe and works fine. */
-#if !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && MAC_OS_X_VERSION_MIN_REQUIRED < 1090
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1090
 #  define kCTLanguageAttributeName CFSTR ("NSLanguage")
 #endif
         CFStringRef lang = CFStringCreateWithCStringNoCopy (kCFAllocatorDefault,
@@ -730,7 +730,7 @@ resize_and_retry:
       CFAttributedStringSetAttribute (attr_string, CFRangeMake (0, chars_len),
 				      kCTFontAttributeName, ct_font);
 
-      if (num_features && range_records.length)
+      if (num_features && range_records.len)
       {
 	unsigned int start = 0;
 	range_record_t *last_range = &range_records[0];
@@ -771,7 +771,7 @@ resize_and_retry:
 	      feature.start < chars_len && feature.start < feature.end)
 	  {
 	    CFRange feature_range = CFRangeMake (feature.start,
-	                                         hb_min (feature.end, chars_len) - feature.start);
+	                                         MIN (feature.end, chars_len) - feature.start);
 	    if (feature.value)
 	      CFAttributedStringRemoveAttribute (attr_string, feature_range, kCTKernAttributeName);
 	    else
@@ -783,7 +783,7 @@ resize_and_retry:
 
       int level = HB_DIRECTION_IS_FORWARD (buffer->props.direction) ? 0 : 1;
       CFNumberRef level_number = CFNumberCreate (kCFAllocatorDefault, kCFNumberIntType, &level);
-#if !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
       extern const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel;
 #endif
       CFDictionaryRef options = CFDictionaryCreate (kCFAllocatorDefault,
@@ -879,7 +879,7 @@ resize_and_retry:
 	 * Also see: https://bugs.chromium.org/p/chromium/issues/detail?id=597098
 	 */
 	bool matched = false;
-	for (unsigned int i = 0; i < range_records.length; i++)
+	for (unsigned int i = 0; i < range_records.len; i++)
 	  if (range_records[i].font && CFEqual (run_ct_font, range_records[i].font))
 	  {
 	    matched = true;
@@ -1069,7 +1069,7 @@ resize_and_retry:
     if (false)
     {
       /* Make sure all runs had the expected direction. */
-      HB_UNUSED bool backward = HB_DIRECTION_IS_BACKWARD (buffer->props.direction);
+      bool backward = HB_DIRECTION_IS_BACKWARD (buffer->props.direction);
       assert (bool (status_and & kCTRunStatusRightToLeft) == backward);
       assert (bool (status_or  & kCTRunStatusRightToLeft) == backward);
     }
@@ -1116,7 +1116,7 @@ resize_and_retry:
 	unsigned int cluster = info[count - 1].cluster;
 	for (unsigned int i = count - 1; i > 0; i--)
 	{
-	  cluster = hb_min (cluster, info[i - 1].cluster);
+	  cluster = MIN (cluster, info[i - 1].cluster);
 	  info[i - 1].cluster = cluster;
 	}
       }
@@ -1125,7 +1125,7 @@ resize_and_retry:
 	unsigned int cluster = info[0].cluster;
 	for (unsigned int i = 1; i < count; i++)
 	{
-	  cluster = hb_min (cluster, info[i].cluster);
+	  cluster = MIN (cluster, info[i].cluster);
 	  info[i].cluster = cluster;
 	}
       }
@@ -1142,9 +1142,77 @@ fail:
   if (line)
     CFRelease (line);
 
-  for (unsigned int i = 0; i < range_records.length; i++)
+  for (unsigned int i = 0; i < range_records.len; i++)
     if (range_records[i].font)
       CFRelease (range_records[i].font);
 
   return ret;
+}
+
+
+/*
+ * AAT shaper
+ */
+
+/*
+ * shaper face data
+ */
+
+struct hb_coretext_aat_face_data_t {};
+
+hb_coretext_aat_face_data_t *
+_hb_coretext_aat_shaper_face_data_create (hb_face_t *face)
+{
+  static const hb_tag_t tags[] = {HB_CORETEXT_TAG_MORX, HB_CORETEXT_TAG_MORT, HB_CORETEXT_TAG_KERX};
+
+  for (unsigned int i = 0; i < ARRAY_LENGTH (tags); i++)
+  {
+    hb_blob_t *blob = face->reference_table (tags[i]);
+    if (hb_blob_get_length (blob))
+    {
+      hb_blob_destroy (blob);
+      return face->data.coretext ? (hb_coretext_aat_face_data_t *) HB_SHAPER_DATA_SUCCEEDED : nullptr;
+    }
+    hb_blob_destroy (blob);
+  }
+
+  return nullptr;
+}
+
+void
+_hb_coretext_aat_shaper_face_data_destroy (hb_coretext_aat_face_data_t *data HB_UNUSED)
+{
+}
+
+
+/*
+ * shaper font data
+ */
+
+struct hb_coretext_aat_font_data_t {};
+
+hb_coretext_aat_font_data_t *
+_hb_coretext_aat_shaper_font_data_create (hb_font_t *font)
+{
+  return font->data.coretext ? (hb_coretext_aat_font_data_t *) HB_SHAPER_DATA_SUCCEEDED : nullptr;
+}
+
+void
+_hb_coretext_aat_shaper_font_data_destroy (hb_coretext_aat_font_data_t *data HB_UNUSED)
+{
+}
+
+
+/*
+ * shaper
+ */
+
+hb_bool_t
+_hb_coretext_aat_shape (hb_shape_plan_t    *shape_plan,
+			hb_font_t          *font,
+			hb_buffer_t        *buffer,
+			const hb_feature_t *features,
+			unsigned int        num_features)
+{
+  return _hb_coretext_shape (shape_plan, font, buffer, features, num_features);
 }

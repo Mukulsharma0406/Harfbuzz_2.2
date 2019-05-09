@@ -62,7 +62,7 @@ fail (hb_bool_t suggest_help, const char *format, ...)
 
 
 static gchar *
-shapers_to_string ()
+shapers_to_string (void)
 {
   GString *shapers = g_string_new (nullptr);
   const char **shaper_list = hb_shape_list_shapers ();
@@ -95,7 +95,7 @@ show_version (const char *name G_GNUC_UNUSED,
 
 
 void
-option_parser_t::add_main_options ()
+option_parser_t::add_main_options (void)
 {
   GOptionEntry entries[] =
   {
@@ -432,8 +432,7 @@ shape_options_t::add_options (option_parser_t *parser)
     "    Features can be enabled or disabled, either globally or limited to\n"
     "    specific character ranges.  The format for specifying feature settings\n"
     "    follows.  All valid CSS font-feature-settings values other than 'normal'\n"
-    "    and the global values are also accepted, though not documented below.\n"
-    "    CSS string escapes are not supported."
+    "    and 'inherited' are also accepted, though, not documented below.\n"
     "\n"
     "    The range indices refer to the positions between Unicode characters,\n"
     "    unless the --utf8-clusters is provided, in which case range indices\n"
@@ -639,7 +638,7 @@ output_options_t::add_options (option_parser_t *parser)
 
 
 hb_font_t *
-font_options_t::get_font () const
+font_options_t::get_font (void) const
 {
   if (font)
     return font;
@@ -796,7 +795,7 @@ text_options_t::get_line (unsigned int *len)
 
 
 FILE *
-output_options_t::get_file_handle ()
+output_options_t::get_file_handle (void)
 {
   if (fp)
     return fp;
@@ -971,60 +970,12 @@ format_options_t::serialize_buffer_of_glyphs (hb_buffer_t  *buffer,
   g_string_append_c (gs, '\n');
 }
 
-static gboolean
-parse_nameids (const char *name G_GNUC_UNUSED,
-               const char *arg,
-               gpointer    data,
-               GError    **error G_GNUC_UNUSED)
-{
-  subset_options_t *subset_opts = (subset_options_t *) data;
-
-  hb_set_t *name_ids = hb_set_create ();
-  char *s = (char *) arg;
-  char *p;
-
-  while (s && *s)
-  {
-    while (*s && strchr ("<+>{},;&#\\xXuUnNiI\n\t\v\f\r ", *s))
-      s++;
-    if (!*s)
-      break;
-
-    errno = 0;
-    hb_codepoint_t u = strtoul (s, &p, 10);
-    if (errno || s == p)
-    {
-      hb_set_destroy (name_ids);
-      g_set_error (error, G_OPTION_ERROR, G_OPTION_ERROR_BAD_VALUE,
-                   "Failed parsing nameID values at: '%s'", s);
-      return false;
-    }
-
-    hb_set_add (name_ids, u);
-
-    s = p;
-  }
-
-  hb_set_t *prev = subset_opts->name_ids;
-  subset_opts->name_ids = hb_set_reference (name_ids);
-  hb_set_destroy (prev);
-  hb_set_destroy (name_ids);
-
-  return true;
-}
-
-
 void
 subset_options_t::add_options (option_parser_t *parser)
 {
   GOptionEntry entries[] =
   {
-    {"layout", 0, 0, G_OPTION_ARG_NONE,  &this->keep_layout,   "Keep OpenType Layout tables",   nullptr},
     {"no-hinting", 0, 0, G_OPTION_ARG_NONE,  &this->drop_hints,   "Whether to drop hints",   nullptr},
-    {"retain-gids", 0, 0, G_OPTION_ARG_NONE,  &this->retain_gids,   "If set don't renumber glyph ids in the subset.",   nullptr},
-    {"desubroutinize", 0, 0, G_OPTION_ARG_NONE,  &this->desubroutinize,   "Remove CFF/CFF2 use of subroutines",   nullptr},
-    {"name-IDs", 0, 0, G_OPTION_ARG_CALLBACK,  (gpointer) &parse_nameids,  "Subset specified nameids", "list of int numbers"},
-
     {nullptr}
   };
   parser->add_group (entries,
@@ -1033,4 +984,3 @@ subset_options_t::add_options (option_parser_t *parser)
          "Options subsetting",
          this);
 }
-

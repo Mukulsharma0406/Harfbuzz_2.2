@@ -29,7 +29,7 @@
 
 #include "hb.hh"
 #include "hb-atomic.hh"
-#include "hb-algs.hh"
+#include "hb-dsalgs.hh"
 
 
 #ifndef HB_DEBUG
@@ -56,16 +56,13 @@ union hb_options_union_t {
 static_assert ((sizeof (hb_atomic_int_t) >= sizeof (hb_options_union_t)), "");
 
 HB_INTERNAL void
-_hb_options_init ();
+_hb_options_init (void);
 
 extern HB_INTERNAL hb_atomic_int_t _hb_options;
 
 static inline hb_options_t
-hb_options ()
+hb_options (void)
 {
-#if defined(HB_NO_GETENV)
-  return hb_options_t ();
-#endif
   /* Make a local copy, so we can access bitfield threadsafely. */
   hb_options_union_t u;
   u.i = _hb_options.get_relaxed ();
@@ -161,7 +158,7 @@ _hb_debug_msg_va (const char *what,
       VBAR VBAR VBAR VBAR VBAR VBAR VBAR VBAR VBAR VBAR;
     fprintf (stderr, "%2u %s" VRBAR "%s",
 	     level,
-	     bars + sizeof (bars) - 1 - hb_min ((unsigned int) sizeof (bars) - 1, (unsigned int) (sizeof (VBAR) - 1) * level),
+	     bars + sizeof (bars) - 1 - MIN ((unsigned int) sizeof (bars) - 1, (unsigned int) (sizeof (VBAR) - 1) * level),
 	     level_dir ? (level_dir > 0 ? DLBAR : ULBAR) : LBAR);
   } else
     fprintf (stderr, "   " VRBAR LBAR);
@@ -287,7 +284,7 @@ struct hb_auto_trace_t
     _hb_debug_msg_va<max_level> (what, obj, func, true, plevel ? *plevel : 0, +1, message, ap);
     va_end (ap);
   }
-  ~hb_auto_trace_t ()
+  inline ~hb_auto_trace_t (void)
   {
     _hb_warn_no_return<ret_t> (returned);
     if (!returned) {
@@ -296,9 +293,9 @@ struct hb_auto_trace_t
     if (plevel) --*plevel;
   }
 
-  ret_t ret (ret_t v,
-	     const char *func = "",
-	     unsigned int line = 0)
+  inline ret_t ret (ret_t v,
+		    const char *func = "",
+		    unsigned int line = 0)
   {
     if (unlikely (returned)) {
       fprintf (stderr, "OUCH, double calls to return_trace().  This is a bug, please report.\n");
@@ -330,20 +327,18 @@ struct hb_auto_trace_t<0, ret_t>
 				   const char *message,
 				   ...) HB_PRINTF_FUNC(6, 7) {}
 
-  template <typename T>
-  T ret (T&& v,
-	 const char *func HB_UNUSED = nullptr,
-	 unsigned int line HB_UNUSED = 0) { return hb_forward<T> (v); }
+  inline ret_t ret (ret_t v,
+		    const char *func HB_UNUSED = 0,
+		    unsigned int line HB_UNUSED = 0) { return v; }
 };
 
 /* For disabled tracing; optimize out everything.
  * https://github.com/harfbuzz/harfbuzz/pull/605 */
 template <typename ret_t>
 struct hb_no_trace_t {
-  template <typename T>
-  T ret (T&& v,
-	 const char *func HB_UNUSED = nullptr,
-	 unsigned int line HB_UNUSED = 0) { return hb_forward<T> (v); }
+  inline ret_t ret (ret_t v,
+		    const char *func HB_UNUSED = "",
+		    unsigned int line HB_UNUSED = 0) { return v; }
 };
 
 #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
@@ -406,6 +401,30 @@ struct hb_no_trace_t {
 #define TRACE_APPLY(this) hb_no_trace_t<bool> trace
 #endif
 
+#ifndef HB_DEBUG_CLOSURE
+#define HB_DEBUG_CLOSURE (HB_DEBUG+0)
+#endif
+#if HB_DEBUG_CLOSURE
+#define TRACE_CLOSURE(this) \
+	hb_auto_trace_t<HB_DEBUG_CLOSURE, hb_void_t> trace \
+	(&c->debug_depth, c->get_name (), this, HB_FUNC, \
+	 " ")
+#else
+#define TRACE_CLOSURE(this) hb_no_trace_t<hb_void_t> trace HB_UNUSED
+#endif
+
+#ifndef HB_DEBUG_COLLECT_GLYPHS
+#define HB_DEBUG_COLLECT_GLYPHS (HB_DEBUG+0)
+#endif
+#if HB_DEBUG_COLLECT_GLYPHS
+#define TRACE_COLLECT_GLYPHS(this) \
+	hb_auto_trace_t<HB_DEBUG_COLLECT_GLYPHS, hb_void_t> trace \
+	(&c->debug_depth, c->get_name (), this, HB_FUNC, \
+	 " ")
+#else
+#define TRACE_COLLECT_GLYPHS(this) hb_no_trace_t<hb_void_t> trace HB_UNUSED
+#endif
+
 #ifndef HB_DEBUG_SANITIZE
 #define HB_DEBUG_SANITIZE (HB_DEBUG+0)
 #endif
@@ -442,12 +461,27 @@ struct hb_no_trace_t {
 #define TRACE_SUBSET(this) hb_no_trace_t<bool> trace
 #endif
 
+#ifndef HB_DEBUG_WOULD_APPLY
+#define HB_DEBUG_WOULD_APPLY (HB_DEBUG+0)
+#endif
+#if HB_DEBUG_WOULD_APPLY
+#define TRACE_WOULD_APPLY(this) \
+	hb_auto_trace_t<HB_DEBUG_WOULD_APPLY, bool> trace \
+	(&c->debug_depth, c->get_name (), this, HB_FUNC, \
+	 "%d glyphs", c->len);
+#else
+#define TRACE_WOULD_APPLY(this) hb_no_trace_t<bool> trace
+#endif
+
 #ifndef HB_DEBUG_DISPATCH
 #define HB_DEBUG_DISPATCH ( \
 	HB_DEBUG_APPLY + \
+	HB_DEBUG_CLOSURE + \
+	HB_DEBUG_COLLECT_GLYPHS + \
 	HB_DEBUG_SANITIZE + \
 	HB_DEBUG_SERIALIZE + \
-	HB_DEBUG_SUBSET + \
+  HB_DEBUG_SUBSET + \
+	HB_DEBUG_WOULD_APPLY + \
 	0)
 #endif
 #if HB_DEBUG_DISPATCH

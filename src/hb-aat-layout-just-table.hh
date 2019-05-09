@@ -45,7 +45,7 @@ using namespace OT;
 
 struct ActionSubrecordHeader
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -62,7 +62,7 @@ struct ActionSubrecordHeader
 
 struct DecompositionAction
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -91,7 +91,7 @@ struct DecompositionAction
 
 struct UnconditionalAddGlyphAction
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -109,7 +109,7 @@ struct UnconditionalAddGlyphAction
 
 struct ConditionalAddGlyphAction
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -134,7 +134,7 @@ struct ConditionalAddGlyphAction
 
 struct DuctileGlyphAction
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -160,7 +160,7 @@ struct DuctileGlyphAction
 
 struct RepeatedAddGlyphAction
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -178,9 +178,9 @@ struct RepeatedAddGlyphAction
 
 struct ActionSubrecord
 {
-  unsigned int get_length () const { return u.header.actionLength; }
+  inline unsigned int get_length (void) const { return u.header.actionLength; }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!c->check_struct (this)))
@@ -215,7 +215,7 @@ struct ActionSubrecord
 
 struct PostcompensationActionChain
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!c->check_struct (this)))
@@ -291,7 +291,7 @@ struct JustWidthDeltaEntry
 
 struct WidthDeltaPair
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -309,7 +309,7 @@ struct WidthDeltaPair
   public:
   DEFINE_SIZE_STATIC (24);
 };
-
+  
 typedef OT::LArrayOf<WidthDeltaPair> WidthDeltaCluster;
 
 struct JustificationCategory
@@ -328,7 +328,7 @@ struct JustificationCategory
 				 * glyph if nonzero. */
   };
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -347,7 +347,7 @@ struct JustificationCategory
 
 struct JustificationHeader
 {
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -371,7 +371,7 @@ struct JustificationHeader
 				 * of postcompensation subtable (set to zero if none).
 				 *
 				 * The postcompensation subtable, if present in the font. */
-  Lookup<OffsetTo<WidthDeltaCluster>>
+  Lookup<OffsetTo<WidthDeltaCluster> >
   		lookupTable;	/* Lookup table associating glyphs with width delta
 				 * clusters. See the description of Width Delta Clusters
 				 * table for details on how to interpret the lookup values. */
@@ -382,9 +382,9 @@ struct JustificationHeader
 
 struct just
 {
-  static constexpr hb_tag_t tableTag = HB_AAT_TAG_just;
+  static const hb_tag_t tableTag = HB_AAT_TAG_just;
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
 

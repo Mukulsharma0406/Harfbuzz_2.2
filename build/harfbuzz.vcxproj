@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|ARM">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|ARM">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5F47CC61-E06F-32C4-B46B-E93D398C1ED6}</ProjectGuid>
+    <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>ARM</Platform>
+    <ProjectName>harfbuzz</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">C:\projects\harfbuzz-2-2\build\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">harfbuzz.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">harfbuzz</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">C:\projects\harfbuzz-2-2\build\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">harfbuzz.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">harfbuzz</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">C:\projects\harfbuzz-2-2\build\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">harfbuzz.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">harfbuzz</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">C:\projects\harfbuzz-2-2\build\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">harfbuzz.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">harfbuzz</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:ARM</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:ARM</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:ARM</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_FALLBACK;HAVE_ATEXIT;HAVE_ISATTY;HAVE_ROUND;HAVE_STDBOOL_H;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;HAVE_UCDN;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\projects\harfbuzz-2-2\src;C:\projects\harfbuzz-2-2\build\src;C:\projects\harfbuzz-2-2\src\hb-ucdn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:ARM</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\projects\harfbuzz-2-2\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Building Custom Rule C:/projects/harfbuzz-2-2/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/projects/harfbuzz-2-2 -BC:/projects/harfbuzz-2-2/build --check-stamp-file C:/projects/harfbuzz-2-2/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">C:/projects/harfbuzz-2-2/CMakeLists.txt;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompilerABI.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystem.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MIPSpro-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPythonInterp.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\GNUInstallDirs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Internal\FeatureTesting.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\WindowsPaths.cmake;C:\projects\harfbuzz-2-2\CMakeLists.txt;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCXXCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeRCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeSystem.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.c;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.cxx;C:\projects\harfbuzz-2-2\build\try_compile_intel_atomic_primitives.c;C:\projects\harfbuzz-2-2\build\try_compile_solaris_atomic_ops.c;C:\projects\harfbuzz-2-2\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">C:\projects\harfbuzz-2-2\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Building Custom Rule C:/projects/harfbuzz-2-2/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/projects/harfbuzz-2-2 -BC:/projects/harfbuzz-2-2/build --check-stamp-file C:/projects/harfbuzz-2-2/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">C:/projects/harfbuzz-2-2/CMakeLists.txt;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompilerABI.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystem.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MIPSpro-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPythonInterp.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\GNUInstallDirs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Internal\FeatureTesting.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\WindowsPaths.cmake;C:\projects\harfbuzz-2-2\CMakeLists.txt;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCXXCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeRCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeSystem.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.c;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.cxx;C:\projects\harfbuzz-2-2\build\try_compile_intel_atomic_primitives.c;C:\projects\harfbuzz-2-2\build\try_compile_solaris_atomic_ops.c;C:\projects\harfbuzz-2-2\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">C:\projects\harfbuzz-2-2\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">Building Custom Rule C:/projects/harfbuzz-2-2/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/projects/harfbuzz-2-2 -BC:/projects/harfbuzz-2-2/build --check-stamp-file C:/projects/harfbuzz-2-2/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">C:/projects/harfbuzz-2-2/CMakeLists.txt;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompilerABI.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystem.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MIPSpro-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPythonInterp.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\GNUInstallDirs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Internal\FeatureTesting.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\WindowsPaths.cmake;C:\projects\harfbuzz-2-2\CMakeLists.txt;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCXXCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeRCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeSystem.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.c;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.cxx;C:\projects\harfbuzz-2-2\build\try_compile_intel_atomic_primitives.c;C:\projects\harfbuzz-2-2\build\try_compile_solaris_atomic_ops.c;C:\projects\harfbuzz-2-2\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">C:\projects\harfbuzz-2-2\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">Building Custom Rule C:/projects/harfbuzz-2-2/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/projects/harfbuzz-2-2 -BC:/projects/harfbuzz-2-2/build --check-stamp-file C:/projects/harfbuzz-2-2/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">C:/projects/harfbuzz-2-2/CMakeLists.txt;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCCompilerABI.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeDetermineSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystem.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CMakeTestRCCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.c;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckFunctionExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MIPSpro-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX-FeatureTests.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\FindPythonInterp.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\GNUInstallDirs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Internal\FeatureTesting.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.13\Modules\Platform\WindowsPaths.cmake;C:\projects\harfbuzz-2-2\CMakeLists.txt;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeCXXCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeRCCompiler.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\3.13.3\CMakeSystem.cmake;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.c;C:\projects\harfbuzz-2-2\build\CMakeFiles\feature_tests.cxx;C:\projects\harfbuzz-2-2\build\try_compile_intel_atomic_primitives.c;C:\projects\harfbuzz-2-2\build\try_compile_solaris_atomic_ops.c;C:\projects\harfbuzz-2-2\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">C:\projects\harfbuzz-2-2\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-fdsc-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-ankr-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-bsln-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-common.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-feat-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-just-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-kerx-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-lcar-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-morx-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout-trak-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-ltag-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-aat-map.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-map.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-algs.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-array.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-atomic.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-blob.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-blob.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-buffer-serialize.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-buffer.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-buffer.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-cache.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-cff-interp-common.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-cff-interp-cs-common.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-cff-interp-dict-common.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-cff1-interp-cs.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-cff2-interp-cs.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-common.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-debug.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-dispatch.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-face.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-face.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-font.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-font.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-iter.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-kern.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-machinery.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-map.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-map.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-meta.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-mutex.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-null.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-object.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-open-file.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-open-type.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-cff-common.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-cff1-table.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-cff1-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-cff2-table.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-cff2-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-cmap-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-color-cbdt-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-color-colr-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-color-cpal-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-color-sbix-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-color-svg-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-color.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-face.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-face.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-font.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-gasp-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-glyf-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-hdmx-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-head-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-hhea-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-hmtx-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-kern-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout-base-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout-common.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout-gdef-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout-gpos-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout-gsub-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout-gsubgpos.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout-jstf-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-map.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-map.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-math-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-math.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-maxp-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-name-language-static.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-name-language.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-name-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-name.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-os2-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-os2-unicode-ranges.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-post-macroman.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-post-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-arabic-fallback.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-arabic-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-arabic-win1256.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-arabic.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-arabic.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-default.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-hangul.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-hebrew.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-indic-table.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-indic.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-indic.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-khmer.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-khmer.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-myanmar.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-myanmar.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-thai.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-use-table.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-use.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-use.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-vowel-constraints.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-vowel-constraints.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-fallback.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-fallback.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-normalize.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-normalize.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-stat-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-tag-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-tag.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-var-avar-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-var-fvar-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-var-hvar-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-var-mvar-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ot-var.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-vorg-table.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-pool.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-sanitize.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-serialize.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-set-digest.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-set.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-set.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-shape-plan.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-shape-plan.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-shape.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-shaper-impl.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-shaper-list.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-shaper.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-shaper.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-static.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-string-array.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-unicode-emoji-table.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-unicode.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-unicode.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-utf.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-vector.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-warning.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-buffer-deserialize-json.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-buffer-deserialize-text.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-indic-machine.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-khmer-machine.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-myanmar-machine.hh" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape-complex-use-machine.hh" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-fallback-shape.cc" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ucdn.cc" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ucdn\ucdn.h" />
+    <ClCompile Include="C:\projects\harfbuzz-2-2\src\hb-ucdn\ucdn.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|ARM'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|ARM'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ucdn\ucdn_db.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat-layout.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-aat.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-blob.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-buffer.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-common.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-deprecated.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-face.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-font.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-map.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-color.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-deprecated.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-font.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-layout.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-math.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-name.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-shape.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot-var.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-ot.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-set.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-shape-plan.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-shape.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-unicode.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb-version.h" />
+    <ClInclude Include="C:\projects\harfbuzz-2-2\src\hb.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\projects\harfbuzz-2-2\build\ZERO_CHECK.vcxproj">
+      <Project>{41929790-F739-3DA3-95EA-F0C47F09B1CA}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

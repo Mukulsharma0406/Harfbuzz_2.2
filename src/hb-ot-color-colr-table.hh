@@ -39,7 +39,7 @@ namespace OT {
 
 struct LayerRecord
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -63,10 +63,10 @@ struct LayerRecord
 
 struct BaseGlyphRecord
 {
-  int cmp (hb_codepoint_t g) const
+  inline int cmp (hb_codepoint_t g) const
   { return g < glyphId ? -1 : g > glyphId ? 1 : 0; }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -87,14 +87,14 @@ struct BaseGlyphRecord
 
 struct COLR
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_COLR;
+  static const hb_tag_t tableTag = HB_OT_TAG_COLR;
 
-  bool has_data () const { return numBaseGlyphs; }
+  inline bool has_data (void) const { return numBaseGlyphs; }
 
-  unsigned int get_glyph_layers (hb_codepoint_t       glyph,
-				 unsigned int         start_offset,
-				 unsigned int        *count, /* IN/OUT.  May be NULL. */
-				 hb_ot_color_layer_t *layers /* OUT.     May be NULL. */) const
+  inline unsigned int get_glyph_layers (hb_codepoint_t       glyph,
+					unsigned int         start_offset,
+					unsigned int        *count, /* IN/OUT.  May be NULL. */
+					hb_ot_color_layer_t *layers /* OUT.     May be NULL. */) const
   {
     const BaseGlyphRecord &record = (this+baseGlyphsZ).bsearch (numBaseGlyphs, glyph);
 
@@ -104,17 +104,17 @@ struct COLR
     if (count)
     {
       hb_array_t<const LayerRecord> segment_layers = glyph_layers.sub_array (start_offset, *count);
-      *count = segment_layers.length;
-      for (unsigned int i = 0; i < segment_layers.length; i++)
+      *count = segment_layers.len;
+      for (unsigned int i = 0; i < segment_layers.len; i++)
       {
         layers[i].glyph = segment_layers.arrayZ[i].glyphId;
         layers[i].color_index = segment_layers.arrayZ[i].colorIdx;
       }
     }
-    return glyph_layers.length;
+    return glyph_layers.len;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -125,9 +125,9 @@ struct COLR
   protected:
   HBUINT16	version;	/* Table version number (starts at 0). */
   HBUINT16	numBaseGlyphs;	/* Number of Base Glyph Records. */
-  LNNOffsetTo<SortedUnsizedArrayOf<BaseGlyphRecord>>
+  LOffsetTo<SortedUnsizedArrayOf<BaseGlyphRecord>, false>
 		baseGlyphsZ;	/* Offset to Base Glyph records. */
-  LNNOffsetTo<UnsizedArrayOf<LayerRecord>>
+  LOffsetTo<UnsizedArrayOf<LayerRecord>, false>
 		layersZ;	/* Offset to Layer Records. */
   HBUINT16	numLayers;	/* Number of Layer Records. */
   public:

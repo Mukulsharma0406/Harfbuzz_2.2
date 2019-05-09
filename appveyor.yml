@@ -66,4 +66,5 @@ artifacts:
   - path: build\$(configuration)\*.lib
   - path: build\$(configuration)\*.pdb
   - path: build\$(configuration)\*.dll
+  - type: zip
   

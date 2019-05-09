@@ -226,7 +226,7 @@ override_features_indic (hb_ot_shape_planner_t *plan)
 
 struct would_substitute_feature_t
 {
-  void init (const hb_ot_map_t *map, hb_tag_t feature_tag, bool zero_context_)
+  inline void init (const hb_ot_map_t *map, hb_tag_t feature_tag, bool zero_context_)
   {
     zero_context = zero_context_;
     map->get_stage_lookups (0/*GSUB*/,
@@ -234,12 +234,12 @@ struct would_substitute_feature_t
 			    &lookups, &count);
   }
 
-  bool would_substitute (const hb_codepoint_t *glyphs,
-			 unsigned int          glyphs_count,
-			 hb_face_t            *face) const
+  inline bool would_substitute (const hb_codepoint_t *glyphs,
+				unsigned int          glyphs_count,
+				hb_face_t            *face) const
   {
     for (unsigned int i = 0; i < count; i++)
-      if (hb_ot_layout_lookup_would_substitute (face, lookups[i].index, glyphs, glyphs_count, zero_context))
+      if (hb_ot_layout_lookup_would_substitute_fast (face, lookups[i].index, glyphs, glyphs_count, zero_context))
 	return true;
     return false;
   }
@@ -252,7 +252,7 @@ struct would_substitute_feature_t
 
 struct indic_shape_plan_t
 {
-  bool load_virama_glyph (hb_font_t *font, hb_codepoint_t *pglyph) const
+  inline bool load_virama_glyph (hb_font_t *font, hb_codepoint_t *pglyph) const
   {
     hb_codepoint_t glyph = virama_glyph.get_relaxed ();
     if (unlikely (glyph == (hb_codepoint_t) -1))
@@ -645,7 +645,7 @@ initial_reordering_consonant_syllable (const hb_ot_shape_plan_t *plan,
   /* Reorder characters */
 
   for (unsigned int i = start; i < base; i++)
-    info[i].indic_position() = hb_min (POS_PRE_C, (indic_position_t) info[i].indic_position());
+    info[i].indic_position() = MIN (POS_PRE_C, (indic_position_t) info[i].indic_position());
 
   if (base < end)
     info[base].indic_position() = POS_BASE_C;
@@ -720,7 +720,7 @@ initial_reordering_consonant_syllable (const hb_ot_shape_plan_t *plan,
     indic_position_t last_pos = POS_START;
     for (unsigned int i = start; i < end; i++)
     {
-      if ((FLAG_UNSAFE (info[i].indic_category()) & (JOINER_FLAGS | FLAG (OT_N) | FLAG (OT_RS) | MEDIAL_FLAGS | FLAG (OT_H))))
+      if ((FLAG_UNSAFE (info[i].indic_category()) & (JOINER_FLAGS | FLAG (OT_N) | FLAG (OT_RS) | FLAG (OT_H))))
       {
 	info[i].indic_position() = last_pos;
 	if (unlikely (info[i].indic_category() == OT_H &&
@@ -801,7 +801,7 @@ initial_reordering_consonant_syllable (const hb_ot_shape_plan_t *plan,
 	  unsigned int j = start + info[i].syllable();
 	  while (j != i)
 	  {
-	    max = hb_max (max, j);
+	    max = MAX (max, j);
 	    unsigned int next = start + info[j].syllable();
 	    info[j].syllable() = 255; /* So we don't process j later again. */
 	    j = next;
@@ -965,9 +965,6 @@ insert_dotted_circles (const hb_ot_shape_plan_t *plan HB_UNUSED,
 		       hb_font_t *font,
 		       hb_buffer_t *buffer)
 {
-  if (unlikely (buffer->flags & HB_BUFFER_FLAG_DO_NOT_INSERT_DOTTED_CIRCLE))
-    return;
-
   /* Note: This loop is extra overhead, but should not be measurable.
    * TODO Use a buffer scratch flag to remove the loop. */
   bool has_broken_syllables = false;
@@ -1008,6 +1005,7 @@ insert_dotted_circles (const hb_ot_shape_plan_t *plan HB_UNUSED,
       ginfo.cluster = buffer->cur().cluster;
       ginfo.mask = buffer->cur().mask;
       ginfo.syllable() = buffer->cur().syllable();
+      /* TODO Set glyph_props? */
 
       /* Insert dottedcircle after possible Repha. */
       while (buffer->idx < buffer->len && buffer->successful &&
@@ -1201,14 +1199,9 @@ final_reordering_syllable (const hb_ot_shape_plan_t *plan,
 	      goto search;
 	    }
 	  }
-	  /* -> If ZWNJ follows this halant, position is moved after it.
-	   *
-	   * IMPLEMENTATION NOTES:
-	   *
-	   * This is taken care of by the state-machine. A Halant,ZWNJ is a terminating
-	   * sequence for a consonant syllable; any pre-base matras occurring after it
-	   * will belong to the subsequent syllable.
-	   */
+	  /* -> If ZWNJ follows this halant, position is moved after it. */
+	  if (info[new_pos + 1].indic_category() == OT_ZWNJ)
+	    new_pos++;
 	}
       }
       else
@@ -1231,14 +1224,14 @@ final_reordering_syllable (const hb_ot_shape_plan_t *plan,
 
 	  /* Note: this merge_clusters() is intentionally *after* the reordering.
 	   * Indic matra reordering is special and tricky... */
-	  buffer->merge_clusters (new_pos, hb_min (end, base + 1));
+	  buffer->merge_clusters (new_pos, MIN (end, base + 1));
 
 	  new_pos--;
 	}
     } else {
       for (unsigned int i = start; i < base; i++)
 	if (info[i].indic_position () == POS_PRE_M) {
-	  buffer->merge_clusters (i, hb_min (end, base + 1));
+	  buffer->merge_clusters (i, MIN (end, base + 1));
 	  break;
 	}
     }

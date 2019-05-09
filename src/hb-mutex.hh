@@ -127,18 +127,20 @@ typedef int hb_mutex_impl_t;
 
 struct hb_mutex_t
 {
+  /* TODO Add tracing. */
+
   hb_mutex_impl_t m;
 
-  void init   () { hb_mutex_impl_init   (&m); }
-  void lock   () { hb_mutex_impl_lock   (&m); }
-  void unlock () { hb_mutex_impl_unlock (&m); }
-  void fini ()   { hb_mutex_impl_finish (&m); }
+  inline void init   (void) { hb_mutex_impl_init   (&m); }
+  inline void lock   (void) { hb_mutex_impl_lock   (&m); }
+  inline void unlock (void) { hb_mutex_impl_unlock (&m); }
+  inline void fini (void) { hb_mutex_impl_finish (&m); }
 };
 
 struct hb_lock_t
 {
-  hb_lock_t (hb_mutex_t &mutex_) : mutex (mutex_) { mutex.lock (); }
-  ~hb_lock_t () { mutex.unlock (); }
+  inline hb_lock_t (hb_mutex_t &mutex_) : mutex (mutex_) { mutex.lock (); }
+  inline ~hb_lock_t (void) { mutex.unlock (); }
   private:
   hb_mutex_t &mutex;
 };

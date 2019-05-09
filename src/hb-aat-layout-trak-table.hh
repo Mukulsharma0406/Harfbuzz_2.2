@@ -46,19 +46,25 @@ struct TrackTableEntry
 {
   friend struct TrackData;
 
-  float get_track_value () const { return track.to_float (); }
+  inline float get_track_value () const
+  {
+    return track.to_float ();
+  }
 
-  int get_value (const void *base, unsigned int index,
-		 unsigned int table_size) const
-  { return (base+valuesZ).as_array (table_size)[index]; }
+  inline int get_value (const void *base,
+			unsigned int index,
+			unsigned int nSizes) const
+  {
+    return (base+valuesZ).as_array (nSizes)[index];
+  }
 
   public:
-  bool sanitize (hb_sanitize_context_t *c, const void *base,
-		 unsigned int table_size) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base,
+			unsigned int nSizes) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
-			  (valuesZ.sanitize (c, base, table_size))));
+			  (valuesZ.sanitize (c, base, nSizes))));
   }
 
   protected:
@@ -66,7 +72,7 @@ struct TrackTableEntry
   NameID	trackNameID;	/* The 'name' table index for this track.
 				 * (a short word or phrase like "loose"
 				 * or "very tight") */
-  NNOffsetTo<UnsizedArrayOf<FWORD>>
+  OffsetTo<UnsizedArrayOf<FWORD>, HBUINT16, false>
 		valuesZ;	/* Offset from start of tracking table to
 				 * per-size tracking values for this track. */
 
@@ -76,10 +82,10 @@ struct TrackTableEntry
 
 struct TrackData
 {
-  float interpolate_at (unsigned int idx,
-			float target_size,
-			const TrackTableEntry &trackTableEntry,
-			const void *base) const
+  inline float interpolate_at (unsigned int idx,
+			       float target_size,
+			       const TrackTableEntry &trackTableEntry,
+			       const void *base) const
   {
     unsigned int sizes = nSizes;
     hb_array_t<const Fixed> size_table ((base+sizeTable).arrayZ, sizes);
@@ -91,7 +97,7 @@ struct TrackData
 	   (1.f - t) * trackTableEntry.get_value (base, idx, sizes);
   }
 
-  int get_tracking (const void *base, float ptem) const
+  inline int get_tracking (const void *base, float ptem) const
   {
     /* CoreText points are CSS pixels (96 per inch),
      * NOT typographic points (72 per inch).
@@ -133,11 +139,11 @@ struct TrackData
       if (size_table[size_index].to_float () >= csspx)
         break;
 
-    return roundf (interpolate_at (size_index ? size_index - 1 : 0, csspx,
-				   *trackTableEntry, base));
+    return round (interpolate_at (size_index ? size_index - 1 : 0, csspx,
+				  *trackTableEntry, base));
   }
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -160,11 +166,11 @@ struct TrackData
 
 struct trak
 {
-  static constexpr hb_tag_t tableTag = HB_AAT_TAG_trak;
+  static const hb_tag_t tableTag = HB_AAT_TAG_trak;
 
-  bool has_data () const { return version.to_int (); }
+  inline bool has_data (void) const { return version.to_int (); }
 
-  bool apply (hb_aat_apply_context_t *c) const
+  inline bool apply (hb_aat_apply_context_t *c) const
   {
     TRACE_APPLY (this);
 
@@ -205,7 +211,7 @@ struct trak
     return_trace (true);
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
 

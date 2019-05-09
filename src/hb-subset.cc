@@ -40,23 +40,16 @@
 #include "hb-ot-maxp-table.hh"
 #include "hb-ot-os2-table.hh"
 #include "hb-ot-post-table.hh"
-#include "hb-ot-cff1-table.hh"
-#include "hb-ot-cff2-table.hh"
-#include "hb-ot-vorg-table.hh"
-#include "hb-ot-name-table.hh"
 #include "hb-ot-layout-gsub-table.hh"
 #include "hb-ot-layout-gpos-table.hh"
 
 
-HB_UNUSED static inline unsigned int
-_plan_estimate_subset_table_size (hb_subset_plan_t *plan,
-				  unsigned int table_len);
-static inline unsigned int
+static unsigned int
 _plan_estimate_subset_table_size (hb_subset_plan_t *plan,
 				  unsigned int table_len)
 {
   unsigned int src_glyphs = plan->source->get_num_glyphs ();
-  unsigned int dst_glyphs = plan->glyphset ()->get_population ();
+  unsigned int dst_glyphs = plan->glyphset->get_population ();
 
   if (unlikely (!src_glyphs))
     return 512 + table_len;
@@ -68,16 +61,14 @@ template<typename TableType>
 static bool
 _subset2 (hb_subset_plan_t *plan)
 {
-  bool result = true;
   hb_blob_t *source_blob = hb_sanitize_context_t ().reference_table<TableType> (plan->source);
   const TableType *table = source_blob->as<TableType> ();
 
   hb_tag_t tag = TableType::tableTag;
+  hb_bool_t result = false;
   if (source_blob->data)
   {
     hb_vector_t<char> buf;
-    /* TODO Not all tables are glyph-related.  'name' table size for example should not be
-     * affected by number of glyphs.  Accommodate that. */
     unsigned int buf_size = _plan_estimate_subset_table_size (plan, source_blob->length);
     DEBUG_MSG(SUBSET, nullptr, "OT::%c%c%c%c initial estimated table size: %u bytes.", HB_UNTAG (tag), buf_size);
     if (unlikely (!buf.alloc (buf_size)))
@@ -86,10 +77,9 @@ _subset2 (hb_subset_plan_t *plan)
       return false;
     }
   retry:
-    hb_serialize_context_t serializer ((void *) buf, buf_size);
-    serializer.start_serialize<TableType> ();
+    hb_serialize_context_t serializer (buf, buf_size);
     hb_subset_context_t c (plan, &serializer);
-    bool needed = table->subset (&c);
+    result = table->subset (&c);
     if (serializer.ran_out_of_room)
     {
       buf_size += (buf_size >> 1) + 32;
@@ -101,23 +91,17 @@ _subset2 (hb_subset_plan_t *plan)
       }
       goto retry;
     }
-    serializer.end_serialize ();
-
-    result = !serializer.in_error ();
-
     if (result)
     {
-      if (needed)
-      {
-	hb_blob_t *dest_blob = serializer.copy_blob ();
-	DEBUG_MSG(SUBSET, nullptr, "OT::%c%c%c%c final subset table size: %u bytes.", HB_UNTAG (tag), dest_blob->length);
-	result = c.plan->add_table (tag, dest_blob);
-	hb_blob_destroy (dest_blob);
-      }
-      else
-      {
-	DEBUG_MSG(SUBSET, nullptr, "OT::%c%c%c%c::subset table subsetted to empty.", HB_UNTAG (tag));
-      }
+      hb_blob_t *dest_blob = serializer.copy_blob ();
+      DEBUG_MSG(SUBSET, nullptr, "OT::%c%c%c%c final subset table size: %u bytes.", HB_UNTAG (tag), dest_blob->length);
+      result = c.plan->add_table (tag, dest_blob);
+      hb_blob_destroy (dest_blob);
+    }
+    else
+    {
+      DEBUG_MSG(SUBSET, nullptr, "OT::%c%c%c%c::subset table subsetted to empty.", HB_UNTAG (tag));
+      result = true;
     }
   }
   else
@@ -161,9 +145,6 @@ _subset_table (hb_subset_plan_t *plan,
     case HB_OT_TAG_hdmx:
       result = _subset<const OT::hdmx> (plan);
       break;
-    case HB_OT_TAG_name:
-      result = _subset2<const OT::name> (plan);
-      break;
     case HB_OT_TAG_head:
       // TODO that won't work well if there is no glyf
       DEBUG_MSG(SUBSET, nullptr, "skip head, handled by glyf");
@@ -196,27 +177,13 @@ _subset_table (hb_subset_plan_t *plan,
     case HB_OT_TAG_post:
       result = _subset<const OT::post> (plan);
       break;
-    case HB_OT_TAG_cff1:
-      result = _subset<const OT::cff1> (plan);
-      break;
-    case HB_OT_TAG_cff2:
-      result = _subset<const OT::cff2> (plan);
-      break;
-    case HB_OT_TAG_VORG:
-      result = _subset<const OT::VORG> (plan);
-      break;
 
-#if !defined(HB_NO_SUBSET_LAYOUT)
-    case HB_OT_TAG_GDEF:
-      result = _subset2<const OT::GDEF> (plan);
-      break;
     case HB_OT_TAG_GSUB:
       result = _subset2<const OT::GSUB> (plan);
       break;
     case HB_OT_TAG_GPOS:
       result = _subset2<const OT::GPOS> (plan);
       break;
-#endif
 
     default:
       hb_blob_t *source_table = hb_face_reference_table (plan->source, tag);
@@ -242,16 +209,11 @@ _should_drop_table (hb_subset_plan_t *plan, hb_tag_t tag)
     case HB_TAG ('h', 'd', 'm', 'x'): /* hint table, fallthrough */
     case HB_TAG ('V', 'D', 'M', 'X'): /* hint table, fallthrough */
       return plan->drop_hints;
-
     // Drop Layout Tables if requested.
-    case HB_OT_TAG_GDEF:
-    case HB_OT_TAG_GPOS:
-    case HB_OT_TAG_GSUB:
-#if defined(HB_NO_SUBSET_LAYOUT)
-      return true;
-#endif
+    case HB_TAG ('G', 'D', 'E', 'F'): /* temporary */
+    case HB_TAG ('G', 'P', 'O', 'S'): /* temporary */
+    case HB_TAG ('G', 'S', 'U', 'B'): /* temporary */
       return plan->drop_layout;
-
     // Drop these tables below by default, list pulled
     // from fontTools:
     case HB_TAG ('B', 'A', 'S', 'E'):

@@ -44,10 +44,10 @@ struct SettingName
   int cmp (hb_aat_layout_feature_selector_t key) const
   { return (int) key - (int) setting; }
 
-  hb_aat_layout_feature_selector_t get_selector () const
+  inline hb_aat_layout_feature_selector_t get_selector (void) const
   { return (hb_aat_layout_feature_selector_t) (unsigned) setting; }
 
-  void get_info (hb_aat_layout_feature_selector_info_t *s,
+  inline void get_info (hb_aat_layout_feature_selector_info_t *s,
 			hb_aat_layout_feature_selector_t default_selector) const
   {
     s->name_id = nameIndex;
@@ -60,7 +60,7 @@ struct SettingName
     s->reserved = 0;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -95,11 +95,11 @@ struct FeatureName
 				 * as the default. */
   };
 
-  unsigned int get_selector_infos (unsigned int                           start_offset,
-				   unsigned int                          *selectors_count, /* IN/OUT.  May be NULL. */
-				   hb_aat_layout_feature_selector_info_t *selectors,       /* OUT.     May be NULL. */
-				   unsigned int                          *pdefault_index,  /* OUT.     May be NULL. */
-				   const void *base) const
+  inline unsigned int get_selector_infos (unsigned int                           start_offset,
+					  unsigned int                          *selectors_count, /* IN/OUT.  May be NULL. */
+					  hb_aat_layout_feature_selector_info_t *selectors,       /* OUT.     May be NULL. */
+					  unsigned int                          *pdefault_index,  /* OUT.     May be NULL. */
+					  const void *base) const
   {
     hb_array_t< const SettingName> settings_table = (base+settingTableZ).as_array (nSettings);
 
@@ -118,18 +118,19 @@ struct FeatureName
     if (selectors_count)
     {
       hb_array_t<const SettingName> arr = settings_table.sub_array (start_offset, selectors_count);
-      for (unsigned int i = 0; i < arr.length; i++)
+      unsigned int count = arr.len;
+      for (unsigned int i = 0; i < count; i++)
         settings_table[start_offset + i].get_info (&selectors[i], default_selector);
     }
-    return settings_table.length;
+    return settings_table.len;
   }
 
-  hb_aat_layout_feature_type_t get_feature_type () const
+  inline hb_aat_layout_feature_type_t get_feature_type () const
   { return (hb_aat_layout_feature_type_t) (unsigned int) feature; }
 
-  hb_ot_name_id_t get_feature_name_id () const { return nameIndex; }
+  inline hb_ot_name_id_t get_feature_name_id () const { return nameIndex; }
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -154,18 +155,18 @@ struct FeatureName
 
 struct feat
 {
-  static constexpr hb_tag_t tableTag = HB_AAT_TAG_feat;
+  static const hb_tag_t tableTag = HB_AAT_TAG_feat;
 
-  bool has_data () const { return version.to_int (); }
+  inline bool has_data (void) const { return version.to_int (); }
 
-  unsigned int get_feature_types (unsigned int                  start_offset,
-				  unsigned int                 *count,
-				  hb_aat_layout_feature_type_t *features) const
+  inline unsigned int get_feature_types (unsigned int                  start_offset,
+					 unsigned int                 *count,
+					 hb_aat_layout_feature_type_t *features) const
   {
     unsigned int feature_count = featureNameCount;
     if (count && *count)
     {
-      unsigned int len = hb_min (feature_count - start_offset, *count);
+      unsigned int len = MIN (feature_count - start_offset, *count);
       for (unsigned int i = 0; i < len; i++)
 	features[i] = namesZ[i + start_offset].get_feature_type ();
       *count = len;
@@ -173,25 +174,25 @@ struct feat
     return featureNameCount;
   }
 
-  const FeatureName& get_feature (hb_aat_layout_feature_type_t feature_type) const
+  inline const FeatureName& get_feature (hb_aat_layout_feature_type_t feature_type) const
   {
     return namesZ.bsearch (featureNameCount, feature_type);
   }
 
-  hb_ot_name_id_t get_feature_name_id (hb_aat_layout_feature_type_t feature) const
+  inline hb_ot_name_id_t get_feature_name_id (hb_aat_layout_feature_type_t feature) const
   { return get_feature (feature).get_feature_name_id (); }
 
-  unsigned int get_selector_infos (hb_aat_layout_feature_type_t           feature_type,
-				   unsigned int                           start_offset,
-				   unsigned int                          *selectors_count, /* IN/OUT.  May be NULL. */
-				   hb_aat_layout_feature_selector_info_t *selectors,       /* OUT.     May be NULL. */
-				   unsigned int                          *default_index    /* OUT.     May be NULL. */) const
+  inline unsigned int get_selector_infos (hb_aat_layout_feature_type_t           feature_type,
+					  unsigned int                           start_offset,
+					  unsigned int                          *selectors_count, /* IN/OUT.  May be NULL. */
+					  hb_aat_layout_feature_selector_info_t *selectors,       /* OUT.     May be NULL. */
+					  unsigned int                          *default_index    /* OUT.     May be NULL. */) const
   {
     return get_feature (feature_type).get_selector_infos (start_offset, selectors_count, selectors,
 							  default_index, this);
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&

@@ -41,7 +41,7 @@ namespace OT {
 
 struct maxpV1Tail
 {
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -71,16 +71,19 @@ struct maxpV1Tail
 
 struct maxp
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_maxp;
+  static const hb_tag_t tableTag = HB_OT_TAG_maxp;
 
-  unsigned int get_num_glyphs () const { return numGlyphs; }
-
-  void set_num_glyphs (unsigned int count)
+  inline unsigned int get_num_glyphs (void) const
   {
-    numGlyphs = count;
+    return numGlyphs;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline void set_num_glyphs (unsigned int count)
+  {
+    numGlyphs.set (count);
+  }
+
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!c->check_struct (this)))
@@ -94,7 +97,7 @@ struct maxp
     return_trace (likely (version.major == 0 && version.minor == 0x5000u));
   }
 
-  bool subset (hb_subset_plan_t *plan) const
+  inline bool subset (hb_subset_plan_t *plan) const
   {
     hb_blob_t *maxp_blob = hb_sanitize_context_t().reference_table<maxp> (plan->source);
     hb_blob_t *maxp_prime_blob = hb_blob_copy_writable_or_fail (maxp_blob);
@@ -105,7 +108,7 @@ struct maxp
     }
     maxp *maxp_prime = (maxp *) hb_blob_get_data (maxp_prime_blob, nullptr);
 
-    maxp_prime->set_num_glyphs (plan->num_output_glyphs ());
+    maxp_prime->set_num_glyphs (plan->glyphs.len);
     if (plan->drop_hints)
       drop_hint_fields (plan, maxp_prime);
 
@@ -114,18 +117,18 @@ struct maxp
     return result;
   }
 
-  static void drop_hint_fields (hb_subset_plan_t *plan HB_UNUSED, maxp *maxp_prime)
+  static inline void drop_hint_fields (hb_subset_plan_t *plan HB_UNUSED, maxp *maxp_prime)
   {
     if (maxp_prime->version.major == 1)
     {
       maxpV1Tail &v1 = StructAfter<maxpV1Tail> (*maxp_prime);
-      v1.maxZones = 1;
-      v1.maxTwilightPoints = 0;
-      v1.maxStorage = 0;
-      v1.maxFunctionDefs = 0;
-      v1.maxInstructionDefs = 0;
-      v1.maxStackElements = 0;
-      v1.maxSizeOfInstructions = 0;
+      v1.maxZones.set (1);
+      v1.maxTwilightPoints.set (0);
+      v1.maxStorage.set (0);
+      v1.maxFunctionDefs.set (0);
+      v1.maxInstructionDefs.set (0);
+      v1.maxStackElements.set (0);
+      v1.maxSizeOfInstructions.set (0);
     }
   }
 

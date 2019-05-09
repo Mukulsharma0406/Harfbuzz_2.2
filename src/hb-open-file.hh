@@ -54,16 +54,17 @@ struct TTCHeader;
 
 typedef struct TableRecord
 {
-  int cmp (Tag t) const { return -t.cmp (tag); }
+  int cmp (Tag t) const
+  { return -t.cmp (tag); }
 
-  HB_INTERNAL static int cmp (const void *pa, const void *pb)
+  static int cmp (const void *pa, const void *pb)
   {
     const TableRecord *a = (const TableRecord *) pa;
     const TableRecord *b = (const TableRecord *) pb;
     return b->cmp (a->tag);
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -82,19 +83,22 @@ typedef struct OffsetTable
 {
   friend struct OpenTypeFontFile;
 
-  unsigned int get_table_count () const { return tables.len; }
-  const TableRecord& get_table (unsigned int i) const
-  { return tables[i]; }
-  unsigned int get_table_tags (unsigned int  start_offset,
-			       unsigned int *table_count, /* IN/OUT */
-			       hb_tag_t     *table_tags /* OUT */) const
+  inline unsigned int get_table_count (void) const
+  { return tables.len; }
+  inline const TableRecord& get_table (unsigned int i) const
+  {
+    return tables[i];
+  }
+  inline unsigned int get_table_tags (unsigned int  start_offset,
+				      unsigned int *table_count, /* IN/OUT */
+				      hb_tag_t     *table_tags /* OUT */) const
   {
     if (table_count)
     {
       if (start_offset >= tables.len)
         *table_count = 0;
       else
-        *table_count = hb_min (*table_count, tables.len - start_offset);
+        *table_count = MIN<unsigned int> (*table_count, tables.len - start_offset);
 
       const TableRecord *sub_tables = tables.arrayZ + start_offset;
       unsigned int count = *table_count;
@@ -103,13 +107,13 @@ typedef struct OffsetTable
     }
     return tables.len;
   }
-  bool find_table_index (hb_tag_t tag, unsigned int *table_index) const
+  inline bool find_table_index (hb_tag_t tag, unsigned int *table_index) const
   {
     Tag t;
-    t = tag;
+    t.set (tag);
     return tables.bfind (t, table_index, HB_BFIND_NOT_FOUND_STORE, Index::NOT_FOUND_INDEX);
   }
-  const TableRecord& get_table_by_tag (hb_tag_t tag) const
+  inline const TableRecord& get_table_by_tag (hb_tag_t tag) const
   {
     unsigned int table_index;
     find_table_index (tag, &table_index);
@@ -118,30 +122,31 @@ typedef struct OffsetTable
 
   public:
 
-  template <typename item_t>
-  bool serialize (hb_serialize_context_t *c,
-		  hb_tag_t sfnt_tag,
-		  hb_array_t<item_t> items)
+  inline bool serialize (hb_serialize_context_t *c,
+			 hb_tag_t sfnt_tag,
+			 Supplier<hb_tag_t> &tags,
+			 Supplier<hb_blob_t *> &blobs,
+			 unsigned int table_count)
   {
     TRACE_SERIALIZE (this);
     /* Alloc 12 for the OTHeader. */
     if (unlikely (!c->extend_min (*this))) return_trace (false);
     /* Write sfntVersion (bytes 0..3). */
-    sfnt_version = sfnt_tag;
+    sfnt_version.set (sfnt_tag);
     /* Take space for numTables, searchRange, entrySelector, RangeShift
      * and the TableRecords themselves.  */
-    if (unlikely (!tables.serialize (c, items.length))) return_trace (false);
+    if (unlikely (!tables.serialize (c, table_count))) return_trace (false);
 
     const char *dir_end = (const char *) c->head;
     HBUINT32 *checksum_adjustment = nullptr;
 
     /* Write OffsetTables, alloc for and write actual table blobs. */
-    for (unsigned int i = 0; i < tables.len; i++)
+    for (unsigned int i = 0; i < table_count; i++)
     {
       TableRecord &rec = tables.arrayZ[i];
-      hb_blob_t *blob = items[i].blob;
-      rec.tag = items[i].tag;
-      rec.length = hb_blob_get_length (blob);
+      hb_blob_t *blob = blobs[i];
+      rec.tag.set (tags[i]);
+      rec.length.set (hb_blob_get_length (blob));
       rec.offset.serialize (c, this);
 
       /* Allocate room for the table and copy it. */
@@ -154,16 +159,17 @@ typedef struct OffsetTable
       c->align (4);
       const char *end = (const char *) c->head;
 
-      if (items[i].tag == HB_OT_TAG_head &&
-	  (unsigned) (end - start) >= head::static_size)
+      if (tags[i] == HB_OT_TAG_head && end - start >= head::static_size)
       {
 	head *h = (head *) start;
 	checksum_adjustment = &h->checkSumAdjustment;
-	*checksum_adjustment = 0;
+	checksum_adjustment->set (0);
       }
 
       rec.checkSum.set_for_data (start, end - start);
     }
+    tags += table_count;
+    blobs += table_count;
 
     tables.qsort ();
 
@@ -174,19 +180,19 @@ typedef struct OffsetTable
       /* The following line is a slower version of the following block. */
       //checksum.set_for_data (this, (const char *) c->head - (const char *) this);
       checksum.set_for_data (this, dir_end - (const char *) this);
-      for (unsigned int i = 0; i < items.length; i++)
+      for (unsigned int i = 0; i < table_count; i++)
       {
 	TableRecord &rec = tables.arrayZ[i];
-	checksum = checksum + rec.checkSum;
+	checksum.set (checksum + rec.checkSum);
       }
 
-      *checksum_adjustment = 0xB1B0AFBAu - checksum;
+      checksum_adjustment->set (0xB1B0AFBAu - checksum);
     }
 
     return_trace (true);
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) && tables.sanitize (c));
@@ -209,10 +215,10 @@ struct TTCHeaderVersion1
 {
   friend struct TTCHeader;
 
-  unsigned int get_face_count () const { return table.len; }
-  const OpenTypeFontFace& get_face (unsigned int i) const { return this+table[i]; }
+  inline unsigned int get_face_count (void) const { return table.len; }
+  inline const OpenTypeFontFace& get_face (unsigned int i) const { return this+table[i]; }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (table.sanitize (c, this));
@@ -222,7 +228,7 @@ struct TTCHeaderVersion1
   Tag		ttcTag;		/* TrueType Collection ID string: 'ttcf' */
   FixedVersion<>version;	/* Version of the TTC Header (1.0),
 				 * 0x00010000u */
-  LArrayOf<LOffsetTo<OffsetTable>>
+  LArrayOf<LOffsetTo<OffsetTable> >
 		table;		/* Array of offsets to the OffsetTable for each font
 				 * from the beginning of the file */
   public:
@@ -235,7 +241,7 @@ struct TTCHeader
 
   private:
 
-  unsigned int get_face_count () const
+  inline unsigned int get_face_count (void) const
   {
     switch (u.header.version.major) {
     case 2: /* version 2 is compatible with version 1 */
@@ -243,7 +249,7 @@ struct TTCHeader
     default:return 0;
     }
   }
-  const OpenTypeFontFace& get_face (unsigned int i) const
+  inline const OpenTypeFontFace& get_face (unsigned int i) const
   {
     switch (u.header.version.major) {
     case 2: /* version 2 is compatible with version 1 */
@@ -252,7 +258,7 @@ struct TTCHeader
     }
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!u.header.version.sanitize (c))) return_trace (false);
@@ -282,10 +288,10 @@ struct TTCHeader
 
 struct ResourceRecord
 {
-  const OpenTypeFontFace & get_face (const void *data_base) const
+  inline const OpenTypeFontFace & get_face (const void *data_base) const
   { return CastR<OpenTypeFontFace> ((data_base+offset).arrayZ); }
 
-  bool sanitize (hb_sanitize_context_t *c,
+  inline bool sanitize (hb_sanitize_context_t *c,
 			const void *data_base) const
   {
     TRACE_SANITIZE (this);
@@ -299,7 +305,7 @@ struct ResourceRecord
   HBINT16	nameOffset;	/* Offset from beginning of resource name list
 				 * to resource name, -1 means there is none. */
   HBUINT8	attrs;		/* Resource attributes */
-  NNOffsetTo<LArrayOf<HBUINT8>, HBUINT24>
+  OffsetTo<LArrayOf<HBUINT8>, HBUINT24, false>
 		offset;		/* Offset from beginning of data block to
 				 * data for this resource */
   HBUINT32	reserved;	/* Reserved for handle to resource */
@@ -311,18 +317,20 @@ struct ResourceRecord
 
 struct ResourceTypeRecord
 {
-  unsigned int get_resource_count () const
+  inline unsigned int get_resource_count (void) const
   { return tag == HB_TAG_sfnt ? resCountM1 + 1 : 0; }
 
-  bool is_sfnt () const { return tag == HB_TAG_sfnt; }
+  inline bool is_sfnt (void) const { return tag == HB_TAG_sfnt; }
 
-  const ResourceRecord& get_resource_record (unsigned int i,
-					     const void *type_base) const
-  { return (type_base+resourcesZ).as_array (get_resource_count ())[i]; }
+  inline const ResourceRecord& get_resource_record (unsigned int i,
+						    const void *type_base) const
+  {
+    return (type_base+resourcesZ).as_array (get_resource_count ())[i];
+  }
 
-  bool sanitize (hb_sanitize_context_t *c,
-		 const void *type_base,
-		 const void *data_base) const
+  inline bool sanitize (hb_sanitize_context_t *c,
+			const void *type_base,
+			const void *data_base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -334,7 +342,7 @@ struct ResourceTypeRecord
   protected:
   Tag		tag;		/* Resource type. */
   HBUINT16	resCountM1;	/* Number of resources minus 1. */
-  NNOffsetTo<UnsizedArrayOf<ResourceRecord>>
+  OffsetTo<UnsizedArrayOf<ResourceRecord>, HBUINT16, false>
 		resourcesZ;	/* Offset from beginning of resource type list
 				 * to reference item list for this type. */
   public:
@@ -343,7 +351,7 @@ struct ResourceTypeRecord
 
 struct ResourceMap
 {
-  unsigned int get_face_count () const
+  inline unsigned int get_face_count (void) const
   {
     unsigned int count = get_type_count ();
     for (unsigned int i = 0; i < count; i++)
@@ -355,8 +363,8 @@ struct ResourceMap
     return 0;
   }
 
-  const OpenTypeFontFace& get_face (unsigned int idx,
-				    const void *data_base) const
+  inline const OpenTypeFontFace& get_face (unsigned int idx,
+					   const void *data_base) const
   {
     unsigned int count = get_type_count ();
     for (unsigned int i = 0; i < count; i++)
@@ -370,7 +378,7 @@ struct ResourceMap
     return Null (OpenTypeFontFace);
   }
 
-  bool sanitize (hb_sanitize_context_t *c, const void *data_base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *data_base) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -380,9 +388,9 @@ struct ResourceMap
   }
 
   private:
-  unsigned int get_type_count () const { return (this+typeList).lenM1 + 1; }
+  inline unsigned int get_type_count (void) const { return (this+typeList).lenM1 + 1; }
 
-  const ResourceTypeRecord& get_type_record (unsigned int i) const
+  inline const ResourceTypeRecord& get_type_record (unsigned int i) const
   { return (this+typeList)[i]; }
 
   protected:
@@ -390,7 +398,7 @@ struct ResourceMap
   HBUINT32	reserved1;	/* Reserved for handle to next resource map */
   HBUINT16	resreved2;	/* Reserved for file reference number */
   HBUINT16	attrs;		/* Resource fork attribute */
-  NNOffsetTo<ArrayOfM1<ResourceTypeRecord>>
+  OffsetTo<ArrayOfM1<ResourceTypeRecord>, HBUINT16, false>
 		typeList;	/* Offset from beginning of map to
 				 * resource type list */
   Offset16	nameList;	/* Offset from beginning of map to
@@ -401,11 +409,11 @@ struct ResourceMap
 
 struct ResourceForkHeader
 {
-  unsigned int get_face_count () const
+  inline unsigned int get_face_count (void) const
   { return (this+map).get_face_count (); }
 
-  const OpenTypeFontFace& get_face (unsigned int idx,
-				    unsigned int *base_offset = nullptr) const
+  inline const OpenTypeFontFace& get_face (unsigned int idx,
+					   unsigned int *base_offset = nullptr) const
   {
     const OpenTypeFontFace &face = (this+map).get_face (idx, &(this+data));
     if (base_offset)
@@ -413,7 +421,7 @@ struct ResourceForkHeader
     return face;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -422,10 +430,10 @@ struct ResourceForkHeader
   }
 
   protected:
-  LNNOffsetTo<UnsizedArrayOf<HBUINT8>>
+  LOffsetTo<UnsizedArrayOf<HBUINT8>, false>
 		data;		/* Offset from beginning of resource fork
 				 * to resource data */
-  LNNOffsetTo<ResourceMap >
+  LOffsetTo<ResourceMap, false>
 		map;		/* Offset from beginning of resource fork
 				 * to resource map */
   HBUINT32	dataLen;	/* Length of resource data */
@@ -449,9 +457,9 @@ struct OpenTypeFontFile
     Typ1Tag		= HB_TAG ('t','y','p','1')  /* Obsolete Apple Type1 font in SFNT container */
   };
 
-  hb_tag_t get_tag () const { return u.tag; }
+  inline hb_tag_t get_tag (void) const { return u.tag; }
 
-  unsigned int get_face_count () const
+  inline unsigned int get_face_count (void) const
   {
     switch (u.tag) {
     case CFFTag:	/* All the non-collection tags */
@@ -463,7 +471,7 @@ struct OpenTypeFontFile
     default:		return 0;
     }
   }
-  const OpenTypeFontFace& get_face (unsigned int i, unsigned int *base_offset = nullptr) const
+  inline const OpenTypeFontFace& get_face (unsigned int i, unsigned int *base_offset = nullptr) const
   {
     if (base_offset)
       *base_offset = 0;
@@ -481,18 +489,19 @@ struct OpenTypeFontFile
     }
   }
 
-  template <typename item_t>
-  bool serialize_single (hb_serialize_context_t *c,
-			 hb_tag_t sfnt_tag,
-			 hb_array_t<item_t> items)
+  inline bool serialize_single (hb_serialize_context_t *c,
+				hb_tag_t sfnt_tag,
+			        Supplier<hb_tag_t> &tags,
+			        Supplier<hb_blob_t *> &blobs,
+			        unsigned int table_count)
   {
     TRACE_SERIALIZE (this);
     assert (sfnt_tag != TTCTag);
     if (unlikely (!c->extend_min (*this))) return_trace (false);
-    return_trace (u.fontFace.serialize (c, sfnt_tag, items));
+    return_trace (u.fontFace.serialize (c, sfnt_tag, tags, blobs, table_count));
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!u.tag.sanitize (c))) return_trace (false);

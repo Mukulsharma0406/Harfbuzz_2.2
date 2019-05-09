@@ -44,9 +44,9 @@ namespace OT {
 
 struct BaseCoordFormat1
 {
-  hb_position_t get_coord () const { return coordinate; }
+  inline hb_position_t get_coord () const { return coordinate; }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this)));
@@ -61,13 +61,13 @@ struct BaseCoordFormat1
 
 struct BaseCoordFormat2
 {
-  hb_position_t get_coord () const
+  inline hb_position_t get_coord () const
   {
     /* TODO */
     return coordinate;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -85,9 +85,9 @@ struct BaseCoordFormat2
 
 struct BaseCoordFormat3
 {
-  hb_position_t get_coord (hb_font_t *font,
-			   const VariationStore &var_store,
-			   hb_direction_t direction) const
+  inline hb_position_t get_coord (hb_font_t *font,
+				  const VariationStore &var_store,
+				  hb_direction_t direction) const
   {
     const Device &device = this+deviceTable;
     return coordinate + (HB_DIRECTION_IS_VERTICAL (direction) ?
@@ -96,7 +96,7 @@ struct BaseCoordFormat3
   }
 
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -116,9 +116,9 @@ struct BaseCoordFormat3
 
 struct BaseCoord
 {
-  hb_position_t get_coord (hb_font_t *font,
-			   const VariationStore &var_store,
-			   hb_direction_t direction) const
+  inline hb_position_t get_coord (hb_font_t *font,
+				  const VariationStore &var_store,
+				  hb_direction_t direction) const
   {
     switch (u.format) {
     case 1: return u.format1.get_coord ();
@@ -128,7 +128,7 @@ struct BaseCoord
     }
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     if (unlikely (!u.format.sanitize (c))) return_trace (false);
@@ -153,7 +153,7 @@ struct BaseCoord
 
 struct FeatMinMaxRecord
 {
-  HB_INTERNAL static int cmp (const void *key_, const void *entry_)
+  static int cmp (const void *key_, const void *entry_)
   {
     hb_tag_t key = * (hb_tag_t *) key_;
     const FeatMinMaxRecord &entry = * (const FeatMinMaxRecord *) entry_;
@@ -162,13 +162,13 @@ struct FeatMinMaxRecord
 	   0;
   }
 
-  void get_min_max (const BaseCoord **min, const BaseCoord **max) const
+  inline void get_min_max (const BaseCoord **min, const BaseCoord **max) const
   {
     if (likely (min)) *min = &(this+minCoord);
     if (likely (max)) *max = &(this+maxCoord);
   }
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -194,7 +194,7 @@ struct FeatMinMaxRecord
 
 struct MinMax
 {
-  void get_min_max (hb_tag_t          feature_tag,
+  inline void get_min_max (hb_tag_t          feature_tag,
 			   const BaseCoord **min,
 			   const BaseCoord **max) const
   {
@@ -213,7 +213,7 @@ struct MinMax
     }
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -241,13 +241,13 @@ struct MinMax
 
 struct BaseValues
 {
-  const BaseCoord &get_base_coord (int baseline_tag_index) const
+  inline const BaseCoord &get_base_coord (int baseline_tag_index) const
   {
     if (baseline_tag_index == -1) baseline_tag_index = defaultIndex;
     return this+baseCoords[baseline_tag_index];
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -271,7 +271,7 @@ struct BaseValues
 
 struct BaseLangSysRecord
 {
-  HB_INTERNAL static int cmp (const void *key_, const void *entry_)
+  static int cmp (const void *key_, const void *entry_)
   {
     hb_tag_t key = * (hb_tag_t *) key_;
     const BaseLangSysRecord &entry = * (const BaseLangSysRecord *) entry_;
@@ -280,10 +280,10 @@ struct BaseLangSysRecord
 	   0;
   }
 
-  const MinMax &get_min_max () const
+  inline const MinMax &get_min_max () const
   { return this+minMax; }
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -301,7 +301,7 @@ struct BaseLangSysRecord
 
 struct BaseScript
 {
-  const MinMax &get_min_max (hb_tag_t language_tag) const
+  inline const MinMax &get_min_max (hb_tag_t language_tag) const
   {
     /* TODO Replace hb_bsearch() with .bsearch(). */
     const BaseLangSysRecord* record = (const BaseLangSysRecord *)
@@ -312,12 +312,13 @@ struct BaseScript
     return record ? record->get_min_max () : this+defaultMinMax;
   }
 
-  const BaseCoord &get_base_coord (int baseline_tag_index) const
+  inline const BaseCoord &get_base_coord (int baseline_tag_index) const
   { return (this+baseValues).get_base_coord (baseline_tag_index); }
 
-  bool is_empty () const { return !baseValues; }
+  inline bool is_empty () const
+  { return !baseValues; }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -345,7 +346,7 @@ struct BaseScript
 struct BaseScriptList;
 struct BaseScriptRecord
 {
-  HB_INTERNAL static int cmp (const void *key_, const void *entry_)
+  static int cmp (const void *key_, const void *entry_)
   {
     hb_tag_t key = * (hb_tag_t *) key_;
     const BaseScriptRecord &entry = * (const BaseScriptRecord *) entry_;
@@ -354,10 +355,10 @@ struct BaseScriptRecord
 	   0;
   }
 
-  const BaseScript &get_base_script (const BaseScriptList *list) const
+  inline const BaseScript &get_base_script (const BaseScriptList *list) const
   { return list+baseScript; }
 
-  bool sanitize (hb_sanitize_context_t *c, const void *base) const
+  inline bool sanitize (hb_sanitize_context_t *c, const void *base) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -376,7 +377,7 @@ struct BaseScriptRecord
 
 struct BaseScriptList
 {
-  const BaseScriptRecord *find_record (hb_tag_t script) const
+  inline const BaseScriptRecord *find_record (hb_tag_t script) const
   {
     /* TODO Replace hb_bsearch() with .bsearch(). */
     return (const BaseScriptRecord *) hb_bsearch (&script, baseScriptRecords.arrayZ,
@@ -386,7 +387,7 @@ struct BaseScriptList
   }
 
   /* TODO: Or client should handle fallback? */
-  const BaseScript &get_base_script (hb_tag_t script) const
+  inline const BaseScript &get_base_script (hb_tag_t script) const
   {
     const BaseScriptRecord *record = find_record (script);
     if (!record) record = find_record ((hb_script_t) HB_TAG ('D','F','L','T'));
@@ -394,7 +395,7 @@ struct BaseScriptList
     return record ? record->get_base_script (this) : Null (BaseScript);
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
@@ -411,7 +412,7 @@ struct BaseScriptList
 
 struct Axis
 {
-  bool get_baseline (hb_ot_layout_baseline_t   baseline,
+  inline bool get_baseline (hb_ot_layout_baseline_t   baseline,
 			    hb_tag_t                  script_tag,
 			    hb_tag_t                  language_tag,
 			    const BaseCoord         **coord) const
@@ -424,11 +425,11 @@ struct Axis
     return true;
   }
 
-  bool get_min_max (hb_tag_t          script_tag,
-		    hb_tag_t          language_tag,
-		    hb_tag_t          feature_tag,
-		    const BaseCoord **min_coord,
-		    const BaseCoord **max_coord) const
+  inline bool get_min_max (hb_tag_t          script_tag,
+			   hb_tag_t          language_tag,
+			   hb_tag_t          feature_tag,
+			   const BaseCoord **min_coord,
+			   const BaseCoord **max_coord) const
   {
     const BaseScript &base_script = (this+baseScriptList).get_base_script (script_tag);
     if (base_script.is_empty ()) return false;
@@ -438,7 +439,7 @@ struct Axis
     return true;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -447,7 +448,7 @@ struct Axis
   }
 
   protected:
-  OffsetTo<SortedArrayOf<Tag>>
+  OffsetTo<SortedArrayOf<Tag> >
 		baseTagList;	/* Offset to BaseTagList table, from beginning
 				 * of Axis table (may be NULL)
 				 * Array of 4-byte baseline identification tags — must
@@ -464,20 +465,20 @@ struct Axis
 
 struct BASE
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_BASE;
+  static const hb_tag_t tableTag = HB_OT_TAG_BASE;
 
-  const Axis &get_axis (hb_direction_t direction) const
+  inline const Axis &get_axis (hb_direction_t direction) const
   { return HB_DIRECTION_IS_VERTICAL (direction) ? this+vAxis : this+hAxis; }
 
-  const VariationStore &get_var_store () const
+  inline const VariationStore &get_var_store () const
   { return version.to_int () < 0x00010001u ? Null (VariationStore) : this+varStore; }
 
-  bool get_baseline (hb_font_t               *font,
-		     hb_ot_layout_baseline_t  baseline,
-		     hb_direction_t           direction,
-		     hb_tag_t                 script_tag,
-		     hb_tag_t                 language_tag,
-		     hb_position_t           *base) const
+  inline bool get_baseline (hb_font_t               *font,
+			    hb_ot_layout_baseline_t  baseline,
+			    hb_direction_t           direction,
+			    hb_tag_t                 script_tag,
+			    hb_tag_t                 language_tag,
+			    hb_position_t           *base) const
   {
     const BaseCoord *base_coord;
     if (!get_axis (direction).get_baseline (baseline, script_tag, language_tag, &base_coord))
@@ -490,13 +491,13 @@ struct BASE
   }
 
   /* TODO: Expose this separately sometime? */
-  bool get_min_max (hb_font_t      *font,
-		    hb_direction_t  direction,
-		    hb_tag_t        script_tag,
-		    hb_tag_t        language_tag,
-		    hb_tag_t        feature_tag,
-		    hb_position_t  *min,
-		    hb_position_t  *max)
+  inline bool get_min_max (hb_font_t      *font,
+			   hb_direction_t  direction,
+			   hb_tag_t        script_tag,
+			   hb_tag_t        language_tag,
+			   hb_tag_t        feature_tag,
+			   hb_position_t  *min,
+			   hb_position_t  *max)
   {
     const BaseCoord *min_coord, *max_coord;
     if (!get_axis (direction).get_min_max (script_tag, language_tag, feature_tag,
@@ -509,7 +510,7 @@ struct BASE
     return true;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&

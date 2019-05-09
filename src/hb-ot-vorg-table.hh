@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Adobe Inc.
+ * Copyright © 2018 Adobe Systems Incorporated.
  *
  *  This is part of HarfBuzz, a text shaping library.
  *
@@ -39,9 +39,9 @@ namespace OT {
 
 struct VertOriginMetric
 {
-  int cmp (hb_codepoint_t g) const { return glyph.cmp (g); }
+  inline int cmp (hb_codepoint_t g) const { return glyph.cmp (g); }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this));
@@ -57,11 +57,11 @@ struct VertOriginMetric
 
 struct VORG
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_VORG;
+  static const hb_tag_t tableTag = HB_OT_TAG_VORG;
 
-  bool has_data () const { return version.to_int (); }
+  inline bool has_data (void) const { return version.to_int (); }
 
-  int get_y_origin (hb_codepoint_t glyph) const
+  inline int get_y_origin (hb_codepoint_t glyph) const
   {
     unsigned int i;
     if (!vertYOrigins.bfind (glyph, &i))
@@ -69,11 +69,11 @@ struct VORG
     return vertYOrigins[i].vertOriginY;
   }
 
-  bool _subset (const hb_subset_plan_t *plan HB_UNUSED,
-		const VORG *vorg_table,
-		const hb_vector_t<VertOriginMetric> &subset_metrics,
-		unsigned int dest_sz,
-		void *dest) const
+  inline bool _subset (const hb_subset_plan_t *plan HB_UNUSED,
+                       const VORG *vorg_table,
+                       const hb_vector_t<VertOriginMetric> &subset_metrics,
+                       unsigned int dest_sz,
+                       void *dest) const
   {
     hb_serialize_context_t c (dest, dest_sz);
 
@@ -81,16 +81,16 @@ struct VORG
     if (unlikely (!c.extend_min (*subset_table)))
       return false;
 
-    subset_table->version.major = 1;
-    subset_table->version.minor = 0;
+    subset_table->version.major.set (1);
+    subset_table->version.minor.set (0);
 
-    subset_table->defaultVertOriginY = vorg_table->defaultVertOriginY;
-    subset_table->vertYOrigins.len = subset_metrics.length;
+    subset_table->defaultVertOriginY.set (vorg_table->defaultVertOriginY);
+    subset_table->vertYOrigins.len.set (subset_metrics.len);
 
     bool success = true;
-    if (subset_metrics.length > 0)
+    if (subset_metrics.len > 0)
     {
-      unsigned int  size = VertOriginMetric::static_size * subset_metrics.length;
+      unsigned int  size = VertOriginMetric::static_size * subset_metrics.len;
       VertOriginMetric  *metrics = c.allocate_size<VertOriginMetric> (size);
       if (likely (metrics != nullptr))
         memcpy (metrics, &subset_metrics[0], size);
@@ -102,7 +102,7 @@ struct VORG
     return success;
   }
 
-  bool subset (hb_subset_plan_t *plan) const
+  inline bool subset (hb_subset_plan_t *plan) const
   {
     hb_blob_t *vorg_blob = hb_sanitize_context_t().reference_table<VORG> (plan->source);
     const VORG *vorg_table = vorg_blob->as<VORG> ();
@@ -110,34 +110,26 @@ struct VORG
     /* count the number of glyphs to be included in the subset table */
     hb_vector_t<VertOriginMetric> subset_metrics;
     subset_metrics.init ();
-
-
-    hb_codepoint_t old_glyph = HB_SET_VALUE_INVALID;
+    unsigned int glyph = 0;
     unsigned int i = 0;
-    while (i < vertYOrigins.len
-           && plan->glyphset ()->next (&old_glyph))
+    while ((glyph < plan->glyphs.len) && (i < vertYOrigins.len))
     {
-      while (old_glyph > vertYOrigins[i].glyph)
-      {
+      if (plan->glyphs[glyph] > vertYOrigins[i].glyph)
         i++;
-        if (i >= vertYOrigins.len)
-          break;
-      }
-
-      if (old_glyph == vertYOrigins[i].glyph)
+      else if (plan->glyphs[glyph] < vertYOrigins[i].glyph)
+        glyph++;
+      else
       {
-        hb_codepoint_t new_glyph;
-        if (plan->new_gid_for_old_gid (old_glyph, &new_glyph))
-        {
-          VertOriginMetric *metrics = subset_metrics.push ();
-          metrics->glyph = new_glyph;
-          metrics->vertOriginY = vertYOrigins[i].vertOriginY;
-        }
+        VertOriginMetric *metrics = subset_metrics.push ();
+        metrics->glyph.set (glyph);
+        metrics->vertOriginY.set (vertYOrigins[i].vertOriginY);
+        glyph++;
+        i++;
       }
     }
 
     /* alloc the new table */
-    unsigned int dest_sz = VORG::min_size + VertOriginMetric::static_size * subset_metrics.length;
+    unsigned int dest_sz = VORG::min_size + VertOriginMetric::static_size * subset_metrics.len;
     void *dest = (void *) malloc (dest_sz);
     if (unlikely (!dest))
     {
@@ -167,7 +159,7 @@ struct VORG
     return success;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&

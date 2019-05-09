@@ -47,36 +47,37 @@ struct DeviceRecord
     unsigned int sizeDeviceRecord;
     hb_subset_plan_t *subset_plan;
 
-    void init (const DeviceRecord *source_device_record,
-	       unsigned int sizeDeviceRecord,
-	       hb_subset_plan_t   *subset_plan)
+    inline void init (const DeviceRecord *source_device_record,
+		      unsigned int sizeDeviceRecord,
+		      hb_subset_plan_t   *subset_plan)
     {
       this->source_device_record = source_device_record;
       this->sizeDeviceRecord = sizeDeviceRecord;
       this->subset_plan = subset_plan;
     }
 
-    unsigned int len () const
-    { return this->subset_plan->num_output_glyphs (); }
-
-    const HBUINT8* operator [] (unsigned int new_gid) const
+    inline unsigned int len () const
     {
-      if (unlikely (new_gid >= len ())) return nullptr;
+      return this->subset_plan->glyphs.len;
+    }
 
-      hb_codepoint_t old_gid;
-      if (!this->subset_plan->old_gid_for_new_gid (new_gid, &old_gid))
-        return &Null(HBUINT8);
+    inline const HBUINT8* operator [] (unsigned int i) const
+    {
+      if (unlikely (i >= len ())) return nullptr;
+      hb_codepoint_t gid = this->subset_plan->glyphs [i];
 
-      if (old_gid >= sizeDeviceRecord - DeviceRecord::min_size)
+      if (gid >= sizeDeviceRecord - DeviceRecord::min_size)
         return nullptr;
-      return &(this->source_device_record->widthsZ[old_gid]);
+      return &(this->source_device_record->widthsZ[gid]);
     }
   };
 
-  static unsigned int get_size (unsigned int count)
-  { return hb_ceil_to_4 (min_size + count * HBUINT8::static_size); }
+  static inline unsigned int get_size (unsigned int count)
+  {
+    return hb_ceil_to_4 (min_size + count * HBUINT8::static_size);
+  }
 
-  bool serialize (hb_serialize_context_t *c, const SubsetView &subset_view)
+  inline bool serialize (hb_serialize_context_t *c, const SubsetView &subset_view)
   {
     TRACE_SERIALIZE (this);
 
@@ -88,8 +89,8 @@ struct DeviceRecord
       return_trace (false);
     }
 
-    this->pixelSize = subset_view.source_device_record->pixelSize;
-    this->maxWidth = subset_view.source_device_record->maxWidth;
+    this->pixelSize.set (subset_view.source_device_record->pixelSize);
+    this->maxWidth.set (subset_view.source_device_record->maxWidth);
 
     for (unsigned int i = 0; i < subset_view.len (); i++)
     {
@@ -99,13 +100,13 @@ struct DeviceRecord
 	DEBUG_MSG(SUBSET, nullptr, "HDMX width for new gid %d is missing.", i);
 	return_trace (false);
       }
-      widthsZ[i] = *width;
+      widthsZ[i].set (*width);
     }
 
     return_trace (true);
   }
 
-  bool sanitize (hb_sanitize_context_t *c, unsigned int sizeDeviceRecord) const
+  inline bool sanitize (hb_sanitize_context_t *c, unsigned int sizeDeviceRecord) const
   {
     TRACE_SANITIZE (this);
     return_trace (likely (c->check_struct (this) &&
@@ -122,12 +123,14 @@ struct DeviceRecord
 
 struct hdmx
 {
-  static constexpr hb_tag_t tableTag = HB_OT_TAG_hdmx;
+  static const hb_tag_t tableTag = HB_OT_TAG_hdmx;
 
-  unsigned int get_size () const
-  { return min_size + numRecords * sizeDeviceRecord; }
+  inline unsigned int get_size (void) const
+  {
+    return min_size + numRecords * sizeDeviceRecord;
+  }
 
-  const DeviceRecord& operator [] (unsigned int i) const
+  inline const DeviceRecord& operator [] (unsigned int i) const
   {
     /* XXX Null(DeviceRecord) is NOT safe as it's num-glyphs lengthed.
      * https://github.com/harfbuzz/harfbuzz/issues/1300 */
@@ -135,15 +138,15 @@ struct hdmx
     return StructAtOffset<DeviceRecord> (&this->firstDeviceRecord, i * sizeDeviceRecord);
   }
 
-  bool serialize (hb_serialize_context_t *c, const hdmx *source_hdmx, hb_subset_plan_t *plan)
+  inline bool serialize (hb_serialize_context_t *c, const hdmx *source_hdmx, hb_subset_plan_t *plan)
   {
     TRACE_SERIALIZE (this);
 
     if (unlikely (!c->extend_min ((*this))))  return_trace (false);
 
-    this->version = source_hdmx->version;
-    this->numRecords = source_hdmx->numRecords;
-    this->sizeDeviceRecord = DeviceRecord::get_size (plan->num_output_glyphs ());
+    this->version.set (source_hdmx->version);
+    this->numRecords.set (source_hdmx->numRecords);
+    this->sizeDeviceRecord.set (DeviceRecord::get_size (plan->glyphs.len));
 
     for (unsigned int i = 0; i < source_hdmx->numRecords; i++)
     {
@@ -157,12 +160,12 @@ struct hdmx
     return_trace (true);
   }
 
-  static size_t get_subsetted_size (const hdmx *source_hdmx, hb_subset_plan_t *plan)
+  static inline size_t get_subsetted_size (const hdmx *source_hdmx, hb_subset_plan_t *plan)
   {
-    return min_size + source_hdmx->numRecords * DeviceRecord::get_size (plan->num_output_glyphs ());
+    return min_size + source_hdmx->numRecords * DeviceRecord::get_size (plan->glyphs.len);
   }
 
-  bool subset (hb_subset_plan_t *plan) const
+  inline bool subset (hb_subset_plan_t *plan) const
   {
     size_t dest_size = get_subsetted_size (this, plan);
     hdmx *dest = (hdmx *) malloc (dest_size);
@@ -193,7 +196,7 @@ struct hdmx
     return result;
   }
 
-  bool sanitize (hb_sanitize_context_t *c) const
+  inline bool sanitize (hb_sanitize_context_t *c) const
   {
     TRACE_SANITIZE (this);
     return_trace (c->check_struct (this) &&
