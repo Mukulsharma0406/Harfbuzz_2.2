@@ -5,7 +5,7 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       compiler: msvc
       generator: Visual Studio 15 2017
-      triplet:arm64-windows
+      triplet: arm64-windows
       platform: ARM64
       configuration: Release
 
