@@ -3,6 +3,7 @@ environment:
   matrix:
     - GENERATOR: "Visual Studio 15 2017"
       TRIPLET: arm64-windows
+      compiler : msvc
       CMAKE_OPTS: "-AARM64 -DENABLE_OPENSSL=off"
 
 install:
