@@ -1,11 +1,8 @@
-platform: x64
 image: Visual Studio 2017
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      compiler: msvc
-      generator: Visual Studio 15 2017
-      triplet: arm64-windows
+    - GENERATOR: "Visual Studio 15 2017"
+      TRIPLET: arm64-windows
       CMAKE_OPTS: "-AARM64 -DENABLE_OPENSSL=off"
 
 install:
@@ -22,10 +19,11 @@ build_script:
   - 'if "%compiler%"=="msvc" set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin'
 
 #  - 'if "%compiler%"=="msvc" if "%platform%"=="ARM" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_FREETYPE=OFF -G "%generator%" ../'
-  - 'if "%compiler%"=="msvc" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_FREETYPE=OFF -G "%generator%" %CMAKE_OPTS% ../'
+  - 'if "%compiler%"=="msvc" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_FREETYPE=OFF -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .. -G "%GENERATOR%" %CMAKE_OPTS%'
 #  - 'if "%compiler%"=="msvc" if "%platform%"=="x64" cmake -DHB_HAVE_UNISCRIBE=OFF -DHB_HAVE_DIRECTWRITE=OFF -DHB_HAVE_GLIB=OFF -DHB_HAVE_FREETYPE=OFF -DHB_BUILD_UTILS=OFF -G "%generator%" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ../'
 
-  - 'if "%compiler%"=="msvc" msbuild harfbuzz.sln /p:Configuration=%configuration% /p:Platform=%platform%'
+  - 'if "%compiler%"=="msvc" cmake --build . --config Release --target INSTALL'
+#  - 'if "%compiler%"=="msvc" msbuild harfbuzz.sln /p:Configuration=%configuration% /p:Platform=%platform%'
   - 'if "%compiler%"=="msvc" if not "%platform%"=="ARM" ctest --output-on-failure -C %configuration%'
 
   - 'if "%compiler%"=="msys2" C:\msys64\usr\bin\bash -lc "curl https://raw.githubusercontent.com/mirror/mingw-w64/023eb04c396d4e8d8fcf604cfababc53dae13398/mingw-w64-headers/include/dwrite_1.h > %MINGW_PREFIX%/%MINGW_CHOST%/include/dwrite_1.h"'
@@ -35,13 +33,6 @@ cache:
   - c:\tools\vcpkg\installed\
   - '%CYGWIN_PREFIX%\var\cache\setup'
 
-notifications:
-  - provider: Email
-    to:
-      - mukul.mnnit@gmail.com
-    on_build_success: false
-    on_build_failure: true
-    on_build_status_changed: true
 
 # Do not build feature branch with open Pull Requests
 skip_branch_with_pr: true
