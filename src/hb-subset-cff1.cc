@@ -147,7 +147,7 @@ struct cff1_top_dict_op_serializer_t : cff_top_dict_op_serializer_t<cff1_top_dic
 	    return_trace (false);
 	  HBUINT8 *p = c->allocate_size<HBUINT8> (1);
 	  if (unlikely (p == nullptr)) return_trace (false);
-	  *p = OpCode_Private;
+	  p->set (OpCode_Private);
 	}
 	break;
 
@@ -892,10 +892,10 @@ static inline bool _write_cff1 (const cff_subset_plan &plan,
     return false;
 
   /* header */
-  cff->version.major = 0x01;
-  cff->version.minor = 0x00;
-  cff->nameIndex = cff->min_size;
-  cff->offSize = 4; /* unused? */
+  cff->version.major.set (0x01);
+  cff->version.minor.set (0x00);
+  cff->nameIndex.set (cff->min_size);
+  cff->offSize.set (4); /* unused? */
 
   /* name INDEX */
   {
@@ -912,7 +912,7 @@ static inline bool _write_cff1 (const cff_subset_plan &plan,
   /* top dict INDEX */
   {
     assert (plan.offsets.topDictInfo.offset == (unsigned) (c.head - c.start));
-    CFF1IndexOf<TopDict> *dest = c.start_embed< CFF1IndexOf<TopDict>> ();
+    CFF1IndexOf<TopDict> *dest = c.start_embed< CFF1IndexOf<TopDict> > ();
     if (dest == nullptr) return false;
     cff1_top_dict_op_serializer_t topSzr;
     top_dict_modifiers_t  modifier (plan.offsets, plan.topDictModSIDs);
